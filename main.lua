@@ -11,7 +11,7 @@ function love.load()
 	-- Tilemap
 	-- Use scene.tileSize to change the tilesize.
 	Scene:setTileMap {
-	    [0xFF0000] = NewTile {
+	    [0xFFFFFF] = NewTile {
             drawable = love.graphics.newImage("assets/tile1.png"),
             offset = 32
         },
@@ -36,7 +36,10 @@ function love.load()
                     print("Exit", other)
                 end
             })
-        end
+        end,
+        [0xFF0000] = NewDirectionalTile {
+            drawable = love.graphics.newImage("assets/spikes1.png"),
+        }
 	}
 
 	Scene:loadMap("maps/testMap.png")
