@@ -11,6 +11,7 @@ function NewPlayer(x,y)
 	end
 
 	self.draw = function (self)
+		love.graphics.draw(self.sprite, self.x,self.y, 0, 1,1, 32,32)
 	end
 
 	return self

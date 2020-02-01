@@ -3,30 +3,37 @@ require "player"
 require "GameScene"
 require "Tile"
 
-local scene = NewGameScene()
+function love.load()
+	Scene = NewGameScene()
+	love.graphics.setDefaultFilter("nearest")
 
--- Tilemap
--- Use scene.tileSize to change the tilesize.
-scene:setTileMap {
-    [0xFF0000] = NewTile(love.graphics.newImage("testTile.png"))
-}
+	-- Tilemap
+	-- Use scene.tileSize to change the tilesize.
+	Scene:setTileMap {
+	    [0xFF0000] = NewTile(love.graphics.newImage("assets/tile1.png"), 32),
+	    [0x0000FF] = function (scene, x,y)
+	    	scene:add(NewPlayer(x*scene.tileSize,y*scene.tileSize))
+	    end,
+	}
 
-scene:loadMap("testMap.png")
+	Scene:loadMap("testMap.png")
+	Width = 640*2
+	Height = Width * 9 / 16
+	Canvas = love.graphics.newCanvas(Width, Height)
 
-function love.update(dt)
-    scene:update(dt)
+	love.window.setMode(Width + 100, Height)
 end
 
-width = 1024
-height = 1024 * 9 / 16
-canvas = love.graphics.newCanvas(width, height)
+function love.update(dt)
+    Scene:update(dt)
+end
 
-love.window.setMode(width, height)
 
 function love.draw()
-    love.graphics.setCanvas(canvas)
-    scene:draw()
+    love.graphics.setCanvas(Canvas)
+    Scene:draw()
     love.graphics.setCanvas()
-    love.graphics.draw(canvas)
+    local scale = math.min(love.graphics.getWidth()/Width,love.graphics.getHeight()/Height)
+    love.graphics.draw(Canvas, love.graphics.getWidth()/2, love.graphics.getHeight()/2, 0, sclae,scale, Width/2,Height/2)
 end
 

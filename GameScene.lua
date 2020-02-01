@@ -54,11 +54,14 @@ function NewGameScene()
 
     local sceneDraw = scene.draw
     scene.draw = function(self)
+        love.graphics.setColor(0,1,1)
+        love.graphics.rectangle("fill", 0,0, Width,Height)
+
         for i = 1, self.mapWidth do
             local row = self.mapTable[i]
             for j = 1, self.mapHeight do
                 if row[j] then
-                    row[j]:drawTile(self, i, j)
+                    row[j]:drawTile(self, i-1, j-1)
                 end
             end
         end
