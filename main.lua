@@ -17,7 +17,7 @@ function love.load()
         },
 	    [0x0000FF] = function (scene, x,y)
 	    	scene:addPlayer(
-                NewHeadPlayer(
+                NewOneLegPlayer(
                     (x-0.5)*scene.tileSize,
                     (y-0.5)*scene.tileSize))
 	    end,
@@ -74,6 +74,7 @@ function love.load()
         ["a"] = false,
         ["b"] = false,
         ["start"] = false,
+        ["jump"] = false,
     }
 end
 
@@ -139,6 +140,16 @@ function ButtonIsDown(btn)
         end
     end
 
+    if btn == "jump" then
+        if love.keyboard.isDown("x") then return true end
+        if love.keyboard.isDown("space") then return true end
+        if love.keyboard.isDown("up") then return true end
+        if GamepadExists() then
+            if Gamepad:isGamepadDown("a") then return true end
+            if Gamepad:isGamepadDown("dpup") then return true end
+            if Gamepad:getGamepadAxis("lefty") < -1*JoystickSensitivity then return true end
+        end
+    end
     if btn == "a" then
         if love.keyboard.isDown("x") then return true end
         if GamepadExists() then
