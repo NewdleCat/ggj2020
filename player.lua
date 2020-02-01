@@ -221,6 +221,7 @@ function NewHeadPlayer(x,y)
 	self.height = 16
 	self.width = 16
 	self.coyoteTime = 0
+	self.hopHeight = -200
 
 	self.update = function (self, scene, dt)
 		local maxWalkSpeed = 120
@@ -296,7 +297,6 @@ function NewHeadPlayer(x,y)
 
 		-- walking
 		local walking = false
-		local hopHeight = -200
 		if ButtonIsDown("right") then
 			if self.xSpeed < maxWalkSpeed then
 				if onGround then
@@ -308,7 +308,7 @@ function NewHeadPlayer(x,y)
 
 			self.direction = 1
 			if onGround then
-				self.ySpeed = hopHeight
+				self.ySpeed = self.hopHeight
 			end
 			walking = true
 		end
@@ -323,7 +323,7 @@ function NewHeadPlayer(x,y)
 
 			self.direction = -1
 			if onGround then
-				self.ySpeed = hopHeight
+				self.ySpeed = self.hopHeight
 			end
 			walking = true
 		end
@@ -373,15 +373,29 @@ function NewHeadPlayer(x,y)
 
 	self.draw = function (self, scene)
 		love.graphics.setColor(1,1,1)
-		love.graphics.draw(
-            self.sprite.source,
-            self.sprite[math.floor(self.animIndex)],
-            self.x - scene.camera.x,self.y - scene.camera.y,
-            0, self.direction,1, 32,48)
+		local animIndex = self.animIndex
+		if not self.sprite[self.animIndex] then
+			love.graphics.draw(
+	            self.sprite.source,
+	            self.sprite[math.floor(self.animIndex)],
+	            self.x - scene.camera.x,self.y - scene.camera.y,
+	            0, self.direction,1, 32,48)
+		else
+			love.graphics.draw(
+	            self.sprite.source,
+	            self.sprite[1],
+	            self.x - scene.camera.x,self.y - scene.camera.y,
+	            0, self.direction,1, 32,48)
+		end
 	end
 
 	return self
 end
 
 function NewOneLegPlayer(x,y)
+	local self = NewHeadPlayer(x,y)
+	self.sprite = NewAnimatedSprite("assets/robotOneLeg.png")
+	self.hopHeight = -550
+
+	return self
 end

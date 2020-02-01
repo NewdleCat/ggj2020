@@ -28,7 +28,7 @@ function love.load()
                 y = y,
                 width = scene.tileSize,
                 height = scene.tileSize,
-                sprite = love.graphics.newImage("assets/robot.png"),
+                sprite = love.graphics.newImage("assets/robotLegAndBody.png"),
 
                 onTriggerEnter = function(self, other)
                     print("Enter", other)
