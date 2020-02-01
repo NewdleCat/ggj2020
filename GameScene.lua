@@ -68,8 +68,7 @@ function NewGameScene()
     -- Converts to tile index, unclipped, e.g. can be less than one and greater
     -- than the map width.
     scene.coordToTileCoord = function(self, x, y)
-        return math.floor(x / self.tileSize),
-            math.floor(y / self.tileSize)
+        return math.floor(x / self.tileSize) + 1, math.floor(y / self.tileSize) + 1
     end
 
     -- Gets the tile at the indexes i, j.
@@ -84,6 +83,10 @@ function NewGameScene()
 
     scene.coordToTile = function(self, x, y)
         return self:getTile(self:coordToTileCoord(x, y))
+    end
+
+    scene.isCollisionAt = function (self, x,y)
+        return self:coordToTile(x,y) ~= nil
     end
 
     local sceneDraw = scene.draw

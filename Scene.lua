@@ -27,7 +27,7 @@ function NewScene()
     scene.update = function(self, dt)
         local i=1
         while i <= #self.objects do
-            if not self.objects[i].update or self.objects[i]:update(dt) then
+            if not self.objects[i].update or self.objects[i]:update(self, dt) then
                 i=i+1
             else
                 table.remove(self.objects, i)
@@ -38,7 +38,7 @@ function NewScene()
     scene.draw = function(self)
         for i, v in ipairs(self.objects) do
             if v.draw then
-                v:draw()
+                v:draw(self)
             end
         end
     end

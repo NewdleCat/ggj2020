@@ -143,6 +143,8 @@ end
 
 
 function NewAnimatedSprite(path)
+	local Floor, Ceil = math.floor, math.ceil
+	local lg = love.graphics
     local imgData = love.image.newImageData(path)
     local iw,ih = imgData:getDimensions()
     local frameCount = iw/ih
