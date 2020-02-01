@@ -9,6 +9,7 @@ function NewPlayer(x,y)
 	self.direction = 1
 	self.height = 32
 	self.width = 24
+	self.coyoteTime = 0
 
 	self.update = function (self, scene, dt)
 		local maxWalkSpeed = 200
@@ -16,6 +17,8 @@ function NewPlayer(x,y)
 		local inAirSpeed = 15
 		local friction = 0.5
 		local jumpSpeed = -550
+
+		self.coyoteTime = math.max(self.coyoteTime-dt, 0)
 
 		-- adding graivty
 		if self.ySpeed > 0 then
@@ -35,10 +38,11 @@ function NewPlayer(x,y)
 
 			self.ySpeed = 0
 			onGround = true
+			self.coyoteTime = 0.1
 		end
 
 		-- jumping
-		if onGround and ButtonPress("a") then
+		if self.coyoteTime > 0 and ButtonPress("a") then
 			self.ySpeed = jumpSpeed
 		end
 
