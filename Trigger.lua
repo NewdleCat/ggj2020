@@ -25,10 +25,14 @@ function NewTrigger(attributes)
 
     trigger.update = function(self, scene, dt)
         if not self.lastContainsPlayer and self.containsPlayer then
-            self:onTriggerEnter(scene.player)
+            if self.onTriggerEnter then
+                self:onTriggerEnter(scene, scene.player)
+            end
         end
         if self.lastContainsPlayer and not self.containsPlayer then
-            self:onTriggerExit(scene.player)
+            if self.onTriggerExit then
+                self:onTriggerExit(scene, scene.player)
+            end
         end
         self.lastContainsPlayer = self.containsPlayer
         return true

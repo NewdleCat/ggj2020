@@ -4,6 +4,8 @@ function NewGameScene()
     scene.player = nil
     scene.tileSize = 64
     scene.skyColor = { 0, 1, 1 }
+    scene.lastCheckpoint = nil
+    scene.playerConstructor = NewPlayer
 
     -- Tilemap should be a table with rgb color hex values as keys and either a
     -- function or table as a value. For example:
@@ -53,10 +55,13 @@ function NewGameScene()
         end
     end
 
-    -- use this to add a player
-    scene.addPlayer = function (self, player)
-        scene:add(player)
-        self.player = player
+    local sceneAdd = scene.add
+    scene.add = function(self, object)
+        sceneAdd(self, object)
+        if object.isPlayer then
+            self.player = object
+        end
+        return object
     end
 
     -- Converts to a tile index, clipped to the map size.
@@ -139,6 +144,13 @@ function NewGameScene()
         end
     end
 
+    scene.onPlayerDie = function(self, player)
+        self:spawnPlayer()
+    end
+
+    scene.spawnPlayer = function(self)
+        self.lastCheckpoint:spawn(self, self.playerConstructor)
+    end
 
     return scene
 end

@@ -27,6 +27,7 @@ function NewScene()
         if object.isTrigger == true then
             self.triggers[#self.triggers + 1] = object
         end
+        return object
     end
 
     -- Use this function to iterate through objects.

@@ -3,6 +3,7 @@ require "player"
 require "GameScene"
 require "Tile"
 require "Trigger"
+require "Checkpoint"
 
 function love.load()
 	Scene = NewGameScene()
@@ -11,17 +12,23 @@ function love.load()
 	-- Tilemap
 	-- Use scene.tileSize to change the tilesize.
 	Scene:setTileMap {
-	    [0xFFFFFF] = NewTile {
+	    [0xFFFFFF] = NewTile { ------------------------------------- GROUND
             drawable = love.graphics.newImage("assets/tile1.png"),
             offset = 32
         },
-	    [0x0000FF] = function (scene, x,y)
-	    	scene:addPlayer(
-                NewPlayer(
-                    (x-0.5)*scene.tileSize,
-                    (y-0.5)*scene.tileSize))
+	    [0x0000FF] = function (scene, i, j) ------------------------ PLAYER SPAWN
+            local x, y = scene:tileCoordToCoord(i, j)
+            scene.lastCheckpoint = {
+                x = x,
+                y = y,
+                spawn = function(self, scene, constructor)
+                    return scene:add(constructor(
+                        self.x + 0.5 * scene.tileSize,
+                        self.y + 0.5 * scene.tileSize))
+                end
+            }
 	    end,
-        [0x00FF00] = function (scene, i, j)
+        [0x00FF00] = function (scene, i, j) ------------------------ ROBOT LEG AND BODY
             local x, y = scene:tileCoordToCoord(i, j)
             scene:add(NewTrigger {
                 x = x,
@@ -30,10 +37,10 @@ function love.load()
                 height = scene.tileSize,
                 sprite = love.graphics.newImage("assets/robotLegAndBody.png"),
 
-                onTriggerEnter = function(self, other)
+                onTriggerEnter = function(self, scene, other)
                     print("Enter", other)
                 end,
-                onTriggerExit = function(self, other)
+                onTriggerExit = function(self, scene, other)
                     print("Exit", other)
                 end,
 
@@ -42,16 +49,23 @@ function love.load()
                 end,
             })
         end,
-        [0xFF0000] = NewDirectionalTile {
+        [0xFF0000] = NewDirectionalTile { -------------------------- SPIKES
             drawable = love.graphics.newImage("assets/spikes1.png"),
             isSolid = false,
             onEnter = function(self, other)
-                print("You fucking died you hoe.")
+                if other.health then
+                    other.health = other.health - 1
+                end
             end
-        }
+        },
+        [0XFFFF00] = function (scene, i, j) ------------------------ CHECKPOINT
+            local x, y = scene:tileCoordToCoord(i, j)
+            scene:add(NewCheckpoint(scene, x, y))
+        end
 	}
 
 	Scene:loadMap("maps/testMap.png")
+    Scene:spawnPlayer()
 	Width = 640*2
 	Height = Width * 9 / 16
 	Canvas = love.graphics.newCanvas(Width, Height)
