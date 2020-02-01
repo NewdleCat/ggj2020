@@ -57,6 +57,7 @@ function NewGameScene()
         end
     end
 
+    -- Converts to a tile index, clipped to the map size.
     scene.coordToTileIndex = function(self, x, y)
         return math.min(math.max(math.floor(x
                 / self.tileSize), 1), self.mapWidth),
@@ -64,13 +65,25 @@ function NewGameScene()
                 / self.tileSize), 1), self.mapHeight)
     end
 
+    -- Converts to tile index, unclipped, e.g. can be less than one and greater
+    -- than the map width.
+    scene.coordToTileCoord = function(self, x, y)
+        return math.floor(x / self.tileSize),
+            math.floor(y / self.tileSize)
+    end
+
     -- Gets the tile at the indexes i, j.
     scene.getTile = function(self, i, j)
-        return self.mapTable[i][j]
+        if i >= 1 and i <= self.mapWidth then
+            if j >= 1 and j <= self.mapHeight then
+                return self.mapTable[i][j]
+            end
+        end
+        return nil
     end
 
     scene.coordToTile = function(self, x, y)
-        return self:getTile(self:coordToTileIndex(x, y))
+        return self:getTile(self:coordToTileCoord(x, y))
     end
 
     local sceneDraw = scene.draw
