@@ -5,6 +5,10 @@ require "Tile"
 require "Trigger"
 
 function love.load()
+    music = love.audio.newSource( 'music/sleep mode.mp3', 'static' )
+    music:setLooping( true ) --the groove dont stop babey
+    music:play()
+
 	Scene = NewGameScene()
 	love.graphics.setDefaultFilter("nearest")
 

@@ -4,6 +4,7 @@ function NewGameScene()
     scene.player = nil
     scene.tileSize = 64
     scene.skyColor = { 0, 1, 1 }
+    scene.backtile = love.graphics.newImage("assets/background1.png")
 
     -- Tilemap should be a table with rgb color hex values as keys and either a
     -- function or table as a value. For example:
@@ -113,13 +114,27 @@ function NewGameScene()
         return nil
     end
 
+    backx = 0
+    backy = 0
+    scene.parentUpdate = scene.update
+    scene.update = function(self, dt)
+        self:parentUpdate(dt)
+        backx = (backx + 1)%128
+        backy = (backy + 1)%128
+    end
+
     local sceneDraw = scene.draw
     scene.draw = function(self)
-        love.graphics.setColor(
-            self.skyColor[1],
-            self.skyColor[2],
-            self.skyColor[3])
-        love.graphics.rectangle("fill", 0,0, Width,Height)
+   --     love.graphics.setColor(
+   --         self.skyColor[1],
+   --         self.skyColor[2],
+   --         self.skyColor[3])
+   --     love.graphics.rectangle("fill", 0,0, Width,Height)
+        for i = -1,10 do
+            for j = -1,10 do
+                love.graphics.draw(scene.backtile, i*128 + backx, j*128 - backy)
+            end
+        end
 
         sceneDraw(self)
         local minI, minJ = self:coordToTileIndex(
