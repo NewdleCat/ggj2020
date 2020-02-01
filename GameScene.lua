@@ -3,6 +3,11 @@ function NewGameScene()
     local scene = NewScene()
 
     scene.tileSize = 64
+    scene.skyColor = { 0, 1, 1 }
+    scene.camera = {
+        x = 0,
+        y = 0
+    }
 
     -- Tilemap should be a table with rgb color hex values as keys and either a
     -- function or table as a value. For example:
@@ -52,14 +57,38 @@ function NewGameScene()
         end
     end
 
+    scene.coordToTileIndex = function(self, x, y)
+        return math.min(math.max(math.floor(x
+                / self.tileSize), 1), self.mapWidth),
+            math.min(math.max(math.floor(y
+                / self.tileSize), 1), self.mapHeight)
+    end
+
+    -- Gets the tile at the indexes i, j.
+    scene.getTile = function(self, i, j)
+        return self.mapTable[i][j]
+    end
+
+    scene.coordToTile = function(self, x, y)
+        return self:getTile(self:coordToTileIndex(x, y))
+    end
+
     local sceneDraw = scene.draw
     scene.draw = function(self)
-        love.graphics.setColor(0,1,1)
+        love.graphics.setColor(
+            self.skyColor[1],
+            self.skyColor[2],
+            self.skyColor[3])
         love.graphics.rectangle("fill", 0,0, Width,Height)
 
-        for i = 1, self.mapWidth do
+        local minI, minJ = self:coordToTileIndex(self.camera.x, self.camera.y)
+        local maxI, maxJ = self:coordToTileIndex(
+            self.camera.x + Width,
+            self.camera.y + Height)
+
+        for i = minI, maxI do
             local row = self.mapTable[i]
-            for j = 1, self.mapHeight do
+            for j = minJ, maxJ do
                 if row[j] then
                     row[j]:drawTile(self, i-1, j-1)
                 end
