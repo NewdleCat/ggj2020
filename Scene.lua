@@ -1,0 +1,46 @@
+
+function NewScene()
+    local scene = {}
+    scene.objects = {}
+    
+    -- Use this function, don't add by using objects.
+    scene.add = function(self, object)
+        self.objects[#self.objects + 1] = object
+    end
+    
+    scene.remove = function(self, object)
+        -- Find the object in the table.
+        for i, v in ipairs(self.objects) do
+            if v == object then
+                table.remove(i)
+                break
+            end
+        end
+    end
+
+    -- Use this function to iterate through objects.
+    scene.forEach = function(self, fun)
+        for i, v in ipairs(self.objects) do
+            fun(v)
+        end
+    end
+
+    scene.update = function(self, dt)
+        for i, v in ipairs(self.objects) do
+            if v.update then
+                v:update(t)
+            end
+        end
+    end
+
+    scene.draw = function(self)
+        for i, v in ipairs(self.objects) do
+            if v.draw then
+                v:draw()
+            end
+        end
+    end
+
+    return scene
+end
+
