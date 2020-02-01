@@ -2,6 +2,7 @@ require "Scene"
 require "player"
 require "GameScene"
 require "Tile"
+require "Trigger"
 
 function love.load()
 	Scene = NewGameScene()
@@ -10,10 +11,32 @@ function love.load()
 	-- Tilemap
 	-- Use scene.tileSize to change the tilesize.
 	Scene:setTileMap {
-	    [0xFF0000] = NewTile(love.graphics.newImage("assets/tile1.png"), 32),
+	    [0xFF0000] = NewTile {
+            drawable = love.graphics.newImage("assets/tile1.png"),
+            offset = 32
+        },
 	    [0x0000FF] = function (scene, x,y)
-	    	scene:addPlayer(NewHeadPlayer((x-0.5)*scene.tileSize,(y-0.5)*scene.tileSize))
+	    	scene:addPlayer(
+                NewHeadPlayer(
+                    (x-0.5)*scene.tileSize,
+                    (y-0.5)*scene.tileSize))
 	    end,
+        [0x00FF00] = function (scene, i, j)
+            local x, y = scene:tileCoordToCoord(i, j)
+            scene:add(NewTrigger {
+                x = x,
+                y = y,
+                width = scene.tileSize,
+                height = scene.tileSize,
+
+                onTriggerEnter = function(self, other)
+                    print("Enter", other)
+                end,
+                onTriggerExit = function(self, other)
+                    print("Exit", other)
+                end
+            })
+        end
 	}
 
 	Scene:loadMap("maps/testMap.png")

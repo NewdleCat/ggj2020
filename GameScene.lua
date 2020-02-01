@@ -74,7 +74,14 @@ function NewGameScene()
     -- Converts to tile index, unclipped, e.g. can be less than one and greater
     -- than the map width.
     scene.coordToTileCoord = function(self, x, y)
-        return math.floor(x / self.tileSize) + 1, math.floor(y / self.tileSize) + 1
+        return math.floor(x / self.tileSize) + 1,
+               math.floor(y / self.tileSize) + 1
+    end
+
+    -- Converts a tile index coordinate to a position in world space.
+    scene.tileCoordToCoord = function(self, i, j)
+        return (i - 1) * self.tileSize,
+               (j - 1) * self.tileSize
     end
 
     -- Gets the tile at the indexes i, j.
@@ -104,8 +111,12 @@ function NewGameScene()
         love.graphics.rectangle("fill", 0,0, Width,Height)
 
         sceneDraw(self)
-        local minI, minJ = self:coordToTileIndex(self.camera.x - self.tileSize, self.camera.y - self.tileSize)
-        local maxI, maxJ = self:coordToTileIndex(self.camera.x + Width + self.tileSize, self.camera.y + Height + self.tileSize)
+        local minI, minJ = self:coordToTileIndex(
+            self.camera.x - self.tileSize,
+            self.camera.y - self.tileSize)
+        local maxI, maxJ = self:coordToTileIndex(
+            self.camera.x + Width + self.tileSize,
+            self.camera.y + Height + self.tileSize)
 
         for i = minI, maxI do
             local row = self.mapTable[i]
