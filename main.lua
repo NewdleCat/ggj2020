@@ -21,7 +21,8 @@ function love.load()
 	Height = Width * 9 / 16
 	Canvas = love.graphics.newCanvas(Width, Height)
 
-	love.window.setMode(Width + 100, Height, {resizable = true})
+	local dw,dh = love.window.getDesktopDimensions()
+	love.window.setMode(math.min(Width, dw), math.min(Height, dh), {resizable = true})
 
     local joysticks = love.joystick.getJoysticks()
     Gamepad = nil

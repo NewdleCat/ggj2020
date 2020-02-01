@@ -57,6 +57,7 @@ function NewGameScene()
         love.graphics.setColor(0,1,1)
         love.graphics.rectangle("fill", 0,0, Width,Height)
 
+        sceneDraw(self)
         for i = 1, self.mapWidth do
             local row = self.mapTable[i]
             for j = 1, self.mapHeight do
@@ -65,7 +66,6 @@ function NewGameScene()
                 end
             end
         end
-        sceneDraw(self)
     end
 
     return scene
