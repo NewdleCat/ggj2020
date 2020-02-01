@@ -70,8 +70,8 @@ function love.load()
 
 	Scene:loadMap("maps/testMap.png")
     Scene:spawnPlayer()
-	Width = 640*2
-	Height = Width * 9 / 16
+	Width = 64*20
+	Height = Width * 0.5
 	Canvas = love.graphics.newCanvas(Width, Height)
 
 	local dw,dh = love.window.getDesktopDimensions()
