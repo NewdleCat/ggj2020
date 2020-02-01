@@ -1,4 +1,5 @@
 require "Scene"
+require "player"
 
 local scene = NewScene()
 

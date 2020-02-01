@@ -1,4 +1,3 @@
-
 function NewScene()
     local scene = {}
     scene.objects = {}
@@ -26,9 +25,12 @@ function NewScene()
     end
 
     scene.update = function(self, dt)
-        for i, v in ipairs(self.objects) do
-            if v.update then
-                v:update(t)
+        local i=1
+        while i <= #self.objects do
+            if not self.objects[i].update or self.objects[i]:update(dt) then
+                i=i+1
+            else
+                table.remove(self.objects, i)
             end
         end
     end
