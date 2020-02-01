@@ -44,6 +44,10 @@ function love.load()
         end,
         [0xFF0000] = NewDirectionalTile {
             drawable = love.graphics.newImage("assets/spikes1.png"),
+            isSolid = false,
+            onEnter = function(self, other)
+                print("You fucking died you hoe.")
+            end
         }
 	}
 

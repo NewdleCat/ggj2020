@@ -11,6 +11,9 @@ function NewTile(attributes)
         tile.isSolid = true
     end
 
+    tile.onCollision = attributes.onCollision
+    tile.onEnter = attributes.onEnter
+
     tile.drawTile = function(self, scene, i, j)
         local x, y = (i - 1) * scene.tileSize - scene.camera.x,
                      (j - 1) * scene.tileSize - scene.camera.y
@@ -36,6 +39,8 @@ function NewDirectionalTile(attributes)
     else
         tile.isSolid = true
     end
+    tile.onCollision = attributes.onCollision
+    tile.onEnter = attributes.onEnter
 
     tile.drawTile = function(self, scene, i, j)
         local x, y = (i - 1) * scene.tileSize - scene.camera.x,
@@ -47,13 +52,13 @@ function NewDirectionalTile(attributes)
             y = y - self.offset
         end
 
-        if scene:getTile(i, j + 1) then
+        if scene:isSolid(i, j + 1) then
             rot = 0 end
-        if scene:getTile(i, j - 1) then
+        if scene:isSolid(i, j - 1) then
             rot = math.pi end
-        if scene:getTile(i - 1, j) then
+        if scene:isSolid(i - 1, j) then
             rot = math.pi * (1 / 2) end
-        if scene:getTile(i + 1, j) then
+        if scene:isSolid(i + 1, j) then
             rot = math.pi * (3 / 2) end
 
         love.graphics.draw(self.drawable,

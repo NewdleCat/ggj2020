@@ -50,16 +50,29 @@ function NewPlayer(x,y)
 
 		-- floor collision
 		local onGround = false
-		if scene:isCollisionAt(self.x+self.width,self.y + self.height + self.ySpeed*dt)
-		or scene:isCollisionAt(self.x-self.width,self.y + self.height + self.ySpeed*dt) then
-			while not scene:isCollisionAt(self.x+self.width, self.y + self.height + 1)
-			and not scene:isCollisionAt(self.x-self.width, self.y + self.height + 1) do
+        local collision1 = scene:getCollisionAt(
+            self.x+self.width,
+            self.y + self.height + self.ySpeed*dt)
+        local collision2 = scene:getCollisionAt(
+            self.x-self.width,
+            self.y + self.height + self.ySpeed*dt)
+		if collision1 or collision2 then
+			while not scene:getCollisionAt(self.x+self.width, self.y + self.height + 1)
+			and not scene:getCollisionAt(self.x-self.width, self.y + self.height + 1) do
 				self.y = self.y + 1
 			end
 
 			self.ySpeed = 0
 			onGround = true
 			self.coyoteTime = 0.1
+
+            -- Call collision callback.
+            if collision1 and collision1.onCollision then
+                collision1:onCollision(self)
+            end
+            if collision2 and collision2.onCollision then
+                collision2:onCollision(self)
+            end
 		end
 
 		-- jumping
@@ -73,14 +86,27 @@ function NewPlayer(x,y)
 
 		-- ceiling collision
 		local headspace = 8
-		if scene:isCollisionAt(self.x+self.width,self.y - self.height + self.ySpeed*dt + headspace)
-		or scene:isCollisionAt(self.x-self.width,self.y - self.height + self.ySpeed*dt + headspace) then
-			while not scene:isCollisionAt(self.x+self.width, self.y - self.height - 1 + headspace)
-			and not scene:isCollisionAt(self.x-self.width, self.y - self.height - 1 + headspace) do
+        collision1 = scene:getCollisionAt(
+            self.x+self.width,
+            self.y - self.height + self.ySpeed*dt + headspace)
+        collision2 = scene:getCollisionAt(
+            self.x-self.width,
+            self.y - self.height + self.ySpeed*dt + headspace)
+		if collision1 or collision2 then
+			while not scene:getCollisionAt(self.x+self.width, self.y - self.height - 1 + headspace)
+			and not scene:getCollisionAt(self.x-self.width, self.y - self.height - 1 + headspace) do
 				self.y = self.y - 1
 			end
 
 			self.ySpeed = 0
+
+            -- Call collision callback.
+            if collision1 and collision1.onCollision then
+                collision1:onCollision(self)
+            end
+            if collision2 and collision2.onCollision then
+                collision2:onCollision(self)
+            end
 		end
 
 		-- integrate y
@@ -112,14 +138,27 @@ function NewPlayer(x,y)
 		end
 
 		-- wall collision
-		if scene:isCollisionAt(self.x+self.width*GetSign(self.xSpeed) + self.xSpeed*dt,self.y + self.height-1)
-		or scene:isCollisionAt(self.x+self.width*GetSign(self.xSpeed) + self.xSpeed*dt,self.y - self.height+headspace) then
-			while not scene:isCollisionAt(self.x+self.width*GetSign(self.xSpeed) + self.xSpeed*dt,self.y + self.height-1)
-			and not scene:isCollisionAt(self.x+self.width*GetSign(self.xSpeed) + self.xSpeed*dt,self.y - self.height+headspace) do
+        collision1 = scene:getCollisionAt(
+            self.x+self.width*GetSign(self.xSpeed) + self.xSpeed*dt,
+            self.y + self.height-1)
+        collision2 = scene:getCollisionAt(
+            self.x+self.width*GetSign(self.xSpeed) + self.xSpeed*dt,
+            self.y - self.height+headspace)
+		if collision1 or collision2 then
+			while not scene:getCollisionAt(self.x+self.width*GetSign(self.xSpeed) + self.xSpeed*dt,self.y + self.height-1)
+			and not scene:getCollisionAt(self.x+self.width*GetSign(self.xSpeed) + self.xSpeed*dt,self.y - self.height+headspace) do
 				self.x = self.x + GetSign(self.xSpeed)
 			end
 
 			self.xSpeed = 0
+
+            -- Call collision callback.
+            if collision1 and collision1.onCollision then
+                collision1:onCollision(self)
+            end
+            if collision2 and collision2.onCollision then
+                collision2:onCollision(self)
+            end
 		end
 
 		-- animate walking, friction when idling
@@ -145,6 +184,16 @@ function NewPlayer(x,y)
 		self.x = self.x + self.xSpeed*dt
 
         doCameraMove(self, scene)
+
+        -- Call on enter on the tile behind you.
+        do
+            local tile = scene:coordToTile(
+                self.x + self.width / 2,
+                self.y + self.width / 2)
+            if tile and tile.onEnter then
+                tile:onEnter(self)
+            end
+        end
 		return true
 	end
 
@@ -192,28 +241,55 @@ function NewHeadPlayer(x,y)
 
 		-- floor collision
 		local onGround = false
-		if scene:isCollisionAt(self.x+self.width,self.y + self.height + self.ySpeed*dt)
-		or scene:isCollisionAt(self.x-self.width,self.y + self.height + self.ySpeed*dt) then
-			while not scene:isCollisionAt(self.x+self.width, self.y + self.height + 1)
-			and not scene:isCollisionAt(self.x-self.width, self.y + self.height + 1) do
+        local collision1 = scene:getCollisionAt(
+            self.x + self.width,
+            self.y + self.height + self.ySpeed*dt)
+        local collision2 = scene:getCollisionAt(
+            self.x - self.width,
+            self.y + self.height + self.ySpeed*dt)
+		if collision1 or collision2 then
+			while not scene:getCollisionAt(self.x+self.width, self.y + self.height + 1)
+			and not scene:getCollisionAt(self.x-self.width, self.y + self.height + 1) do
 				self.y = self.y + 1
 			end
 
 			self.ySpeed = 0
 			onGround = true
 			self.coyoteTime = 0.1
+
+            -- Call collision callback.
+            if collision1 and collision1.onCollision then
+                collision1:onCollision(self)
+            end
+            if collision2 and collision2.onCollision then
+                collision2:onCollision(self)
+            end
 		end
 
 		-- ceiling collision
 		local headspace = 8
-		if scene:isCollisionAt(self.x+self.width,self.y - self.height + self.ySpeed*dt + headspace)
-		or scene:isCollisionAt(self.x-self.width,self.y - self.height + self.ySpeed*dt + headspace) then
-			while not scene:isCollisionAt(self.x+self.width, self.y - self.height - 1 + headspace)
-			and not scene:isCollisionAt(self.x-self.width, self.y - self.height - 1 + headspace) do
+
+        collision1 = scene:getCollisionAt(
+            self.x+self.width,
+            self.y - self.height + self.ySpeed*dt + headspace)
+        collision2 = scene:getCollisionAt(
+            self.x-self.width,
+            self.y - self.height + self.ySpeed*dt + headspace)
+		if collision1 or collision2 then
+			while not scene:getCollisionAt(self.x+self.width, self.y - self.height - 1 + headspace)
+			and not scene:getCollisionAt(self.x-self.width, self.y - self.height - 1 + headspace) do
 				self.y = self.y - 1
 			end
 
 			self.ySpeed = 0
+
+            -- Call collision callback.
+            if collision1 and collision1.onCollision then
+                collision1:onCollision(self)
+            end
+            if collision2 and collision2.onCollision then
+                collision2:onCollision(self)
+            end
 		end
 
 		-- integrate y
@@ -256,15 +332,28 @@ function NewHeadPlayer(x,y)
 			self.ySpeed = self.ySpeed / 2
 		end
 
+        collision1 = scene:getCollisionAt(
+            self.x+self.width*GetSign(self.xSpeed) + self.xSpeed*dt,
+            self.y + self.height-1)
+        collision2 = scene:getCollisionAt(
+            self.x+self.width*GetSign(self.xSpeed) + self.xSpeed*dt,
+            self.y - self.height+headspace)
 		-- wall collision
-		if scene:isCollisionAt(self.x+self.width*GetSign(self.xSpeed) + self.xSpeed*dt,self.y + self.height-1)
-		or scene:isCollisionAt(self.x+self.width*GetSign(self.xSpeed) + self.xSpeed*dt,self.y - self.height+headspace) then
-			while not scene:isCollisionAt(self.x+self.width*GetSign(self.xSpeed) + self.xSpeed*dt,self.y + self.height-1)
-			and not scene:isCollisionAt(self.x+self.width*GetSign(self.xSpeed) + self.xSpeed*dt,self.y - self.height+headspace) do
+		if collision1 or collision2 then
+			while not scene:getCollisionAt(self.x+self.width*GetSign(self.xSpeed) + self.xSpeed*dt,self.y + self.height-1)
+			and not scene:getCollisionAt(self.x+self.width*GetSign(self.xSpeed) + self.xSpeed*dt,self.y - self.height+headspace) do
 				self.x = self.x + GetSign(self.xSpeed)
 			end
 
 			self.xSpeed = 0
+
+            -- Call collision callback.
+            if collision1 and collision1.onCollision then
+                collision1:onCollision(self)
+            end
+            if collision2 and collision2.onCollision then
+                collision2:onCollision(self)
+            end
 		end
 
 		-- animate walking, friction when idling
