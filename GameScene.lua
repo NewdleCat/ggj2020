@@ -95,7 +95,8 @@ function NewGameScene()
     end
 
     scene.isCollisionAt = function (self, x,y)
-        return self:coordToTile(x,y) ~= nil
+        local tile = self:coordToTile(x,y)
+        return tile ~= nil and tile.isSolid
     end
 
     local sceneDraw = scene.draw
@@ -118,7 +119,7 @@ function NewGameScene()
             local row = self.mapTable[i]
             for j = minJ, maxJ do
                 if row[j] then
-                    row[j]:drawTile(self, i-1, j-1)
+                    row[j]:drawTile(self, i, j)
                 end
             end
         end
