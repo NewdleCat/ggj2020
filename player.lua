@@ -31,6 +31,8 @@ function NewPlayer(x,y)
 	self.height = 32
 	self.width = 24
 	self.coyoteTime = 0
+    self.isPlayer = true
+    self.health = 1
 
 	self.update = function (self, scene, dt)
 		local maxWalkSpeed = 200
@@ -207,6 +209,12 @@ function NewPlayer(x,y)
                 tile:onEnter(self)
             end
         end
+
+        -- Get deleted if you die.
+        if self.health <= 0 then
+            scene:onPlayerDie(self)
+            return false
+        end
 		return true
 	end
 
@@ -241,6 +249,8 @@ function NewHeadPlayer(x,y)
 	self.maxWalkSpeed = 120
 	self.walkSpeed = 40
 	self.inAirSpeed = 15
+    self.isPlayer = true
+    self.health = 1
 
 	self.update = function (self, scene, dt)
 		local maxWalkSpeed = self.maxWalkSpeed
@@ -384,6 +394,14 @@ function NewHeadPlayer(x,y)
 		self.x = self.x + self.xSpeed*dt
 
         doCameraMove(self, scene)
+
+        print(self.x, self.y)
+
+        -- Get deleted if you die.
+        if self.health <= 0 then
+            scene:onPlayerDie(self)
+            return false
+        end
 		return true
 	end
 
