@@ -78,11 +78,11 @@ function NewPlayer(x,y)
 		end
 
 		-- jumping
-		if self.coyoteTime > 0 and ButtonPress("a") then
+		if self.coyoteTime > 0 and ButtonPress("jump") then
 			self.ySpeed = jumpSpeed
 		end
 
-		if not ButtonIsDown("a") and self.ySpeed < 0 then
+		if not ButtonIsDown("jump") and self.ySpeed < 0 then
 			self.ySpeed = self.ySpeed / 2
 		end
 
@@ -243,23 +243,28 @@ function NewHeadPlayer(x,y)
 	self.width = 16
 	self.coyoteTime = 0
 	self.hopHeight = -200
+	self.upGrav = 800
+	self.downGrav = 4000
+	self.headspace = 8
+	self.maxWalkSpeed = 120
+	self.walkSpeed = 40
+	self.inAirSpeed = 15
     self.isPlayer = true
     self.health = 1
 
 	self.update = function (self, scene, dt)
-		local maxWalkSpeed = 120
-		local walkSpeed = 40
-		local inAirSpeed = 15
+		local maxWalkSpeed = self.maxWalkSpeed
+		local walkSpeed = self.walkSpeed
+		local inAirSpeed = self.inAirSpeed
 		local friction = 0.5
-		local jumpSpeed = -550
 
 		self.coyoteTime = math.max(self.coyoteTime-dt, 0)
 
 		-- adding graivty
 		if self.ySpeed > 0 then
-			self.ySpeed = self.ySpeed + dt*4000
+			self.ySpeed = self.ySpeed + dt*self.downGrav
 		else
-			self.ySpeed = self.ySpeed + dt*800
+			self.ySpeed = self.ySpeed + dt*self.upGrav
 		end
 
 		-- floor collision
@@ -290,7 +295,7 @@ function NewHeadPlayer(x,y)
 		end
 
 		-- ceiling collision
-		local headspace = 8
+		local headspace = self.headspace
 
         collision1 = scene:getCollisionAt(
             self.x+self.width,
@@ -349,11 +354,6 @@ function NewHeadPlayer(x,y)
 				self.ySpeed = self.hopHeight
 			end
 			walking = true
-		end
-
-		if not walking then
-		else
-			self.animIndex = 2
 		end
 
 		if not walking and self.ySpeed < 0 then
@@ -442,6 +442,24 @@ function NewOneLegPlayer(x,y)
 	local self = NewHeadPlayer(x,y)
 	self.sprite = NewAnimatedSprite("assets/robotOneLeg.png")
 	self.hopHeight = -550
+	self.upGrav = 2000
+	self.downGrav = 4000
+	self.headspace = 10
+	self.height = 32
+	self.maxWalkSpeed = 200
+	self.walkSpeed = 60
+
+	self.animate = function (self, walking, scene, dt)
+	end
+
+	self.draw = function (self, scene)
+		love.graphics.setColor(1,1,1)
+		love.graphics.draw(
+            self.sprite.source,
+            self.sprite[math.floor(self.animIndex)],
+            self.x - scene.camera.x,self.y - scene.camera.y,
+            0, self.direction,1, 32,32)
+	end
 
 	return self
 end
