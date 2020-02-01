@@ -1,13 +1,17 @@
 require "Scene"
 require "player"
+require "GameScene"
+require "Tile"
 
-local scene = NewScene()
+local scene = NewGameScene()
 
-scene:add {
-    draw = function(self)
-        love.graphics.circle("fill", 32, 32, 32)
-    end
+-- Tilemap
+-- Use scene.tileSize to change the tilesize.
+scene:setTileMap {
+    [0xFF0000] = NewTile(love.graphics.newImage("testTile.png"))
 }
+
+scene:loadMap("testMap.png")
 
 function love.update(dt)
     scene:update(dt)
@@ -25,3 +29,4 @@ function love.draw()
     love.graphics.setCanvas()
     love.graphics.draw(canvas)
 end
+
