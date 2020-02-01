@@ -166,7 +166,20 @@ function NewPlayer(x,y)
 		-- animate walking, friction when idling
 		if not walking then
 			self.xSpeed = self.xSpeed * friction*dt*60
-			self.animIndex = 1
+			if math.floor(self.animIndex) ~= 1 and math.floor(self.animIndex) ~= 4 then
+				self.animIndex = 1
+			end
+
+			local lastAnimIndex = self.animIndex
+			self.animIndex = self.animIndex + dt*2
+			if math.floor(lastAnimIndex) == 1 and math.floor(self.animIndex) > 1 then
+				lastAnimIndex = 4
+				self.animIndex = 4
+			end
+			if math.floor(lastAnimIndex) == 4 and math.floor(self.animIndex) > 4 then
+				lastAnimIndex = 1
+				self.animIndex = 1
+			end
 		else
 			self.animIndex = math.max(self.animIndex + dt*5, 2)
 			if math.floor(self.animIndex) > 3 then
@@ -338,7 +351,12 @@ function NewHeadPlayer(x,y)
 			walking = true
 		end
 
-		if not ButtonIsDown("left") and not ButtonIsDown("right") and self.ySpeed < 0 then
+		if not walking then
+		else
+			self.animIndex = 2
+		end
+
+		if not walking and self.ySpeed < 0 then
 			self.ySpeed = self.ySpeed / 2
 		end
 
@@ -369,11 +387,9 @@ function NewHeadPlayer(x,y)
 		-- animate walking, friction when idling
 		if not walking then
 			self.xSpeed = self.xSpeed * friction*dt*60
-			self.animIndex = 1
-		else
-			self.animIndex = 2
 		end
 
+		self:animate(walking, scene, dt)
 		-- integrate x
 		self.x = self.x + self.xSpeed*dt
 
@@ -391,19 +407,31 @@ function NewHeadPlayer(x,y)
 
 	self.draw = function (self, scene)
 		love.graphics.setColor(1,1,1)
-		local animIndex = self.animIndex
-		if not self.sprite[self.animIndex] then
-			love.graphics.draw(
-	            self.sprite.source,
-	            self.sprite[math.floor(self.animIndex)],
-	            self.x - scene.camera.x,self.y - scene.camera.y,
-	            0, self.direction,1, 32,48)
+		love.graphics.draw(
+            self.sprite.source,
+            self.sprite[math.floor(self.animIndex)],
+            self.x - scene.camera.x,self.y - scene.camera.y,
+            0, self.direction,1, 32,48)
+	end
+
+	self.animate = function (self, walking, scene, dt)
+		if not walking then
+			if math.floor(self.animIndex) ~= 1 and math.floor(self.animIndex) ~= 3 then
+				self.animIndex = 1
+			end
+
+			local lastAnimIndex = self.animIndex
+			self.animIndex = self.animIndex + dt*2
+			if math.floor(lastAnimIndex) == 1 and math.floor(self.animIndex) > 1 then
+				lastAnimIndex = 3
+				self.animIndex = 3
+			end
+			if math.floor(lastAnimIndex) == 3 and math.floor(self.animIndex) > 3 then
+				lastAnimIndex = 1
+				self.animIndex = 1
+			end
 		else
-			love.graphics.draw(
-	            self.sprite.source,
-	            self.sprite[1],
-	            self.x - scene.camera.x,self.y - scene.camera.y,
-	            0, self.direction,1, 32,48)
+			self.animIndex = 2
 		end
 	end
 

@@ -18,7 +18,7 @@ function NewScene()
     scene.startCamMoveTime = 0
     scene.endCamMoveTime = 0
     scene.time = 0
-    scene.defaultCamMoveDuration = 1
+    scene.defaultCamMoveDuration = 0.5
     scene.isCameraMoving = false
     
     -- Use this function, don't add by using objects.
@@ -45,18 +45,20 @@ function NewScene()
             trigger.containsPlayer = trigger:overlaps(self.player)
         end
 
-        while i <= #self.objects do
-            local object = self.objects[i]
-            if not object.update or object:update(self, dt) then
-                i=i+1
-            else
-                table.remove(self.objects, i)
+        if not self.isCameraMoving then
+            while i <= #self.objects do
+                local object = self.objects[i]
+                if not object.update or object:update(self, dt) then
+                    i=i+1
+                else
+                    table.remove(self.objects, i)
 
-                -- If the object is a trigger, remove it from the trigger list.
-                if object.trigger then
-                    for j, v in ipairs(self.triggers) do
-                        if v == object then
-                            table.remove(self.triggers, v)
+                    -- If the object is a trigger, remove it from the trigger list.
+                    if object.trigger then
+                        for j, v in ipairs(self.triggers) do
+                            if v == object then
+                                table.remove(self.triggers, v)
+                            end
                         end
                     end
                 end
