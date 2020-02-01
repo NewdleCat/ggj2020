@@ -90,6 +90,17 @@ function NewGameScene()
         return nil
     end
 
+    -- Returns whether the tile at the indexes i, j is solid.
+    scene.isSolid = function(self, i, j)
+        if i >= 1 and i <= self.mapWidth then
+            if j >= 1 and j <= self.mapHeight then
+                local tile = self.mapTable[i][j]
+                return tile and tile.isSolid
+            end
+        end
+        return false
+    end
+
     scene.coordToTile = function(self, x, y)
         return self:getTile(self:coordToTileCoord(x, y))
     end

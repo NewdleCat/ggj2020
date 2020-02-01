@@ -52,13 +52,13 @@ function NewDirectionalTile(attributes)
             y = y - self.offset
         end
 
-        if scene:getTile(i, j + 1) then
+        if scene:isSolid(i, j + 1) then
             rot = 0 end
-        if scene:getTile(i, j - 1) then
+        if scene:isSolid(i, j - 1) then
             rot = math.pi end
-        if scene:getTile(i - 1, j) then
+        if scene:isSolid(i - 1, j) then
             rot = math.pi * (1 / 2) end
-        if scene:getTile(i + 1, j) then
+        if scene:isSolid(i + 1, j) then
             rot = math.pi * (3 / 2) end
 
         love.graphics.draw(self.drawable,
