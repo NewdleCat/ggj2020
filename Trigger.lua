@@ -8,19 +8,13 @@
 function NewTrigger(attributes)
     local trigger = {}
 
-    trigger.x = attributes.x
-    trigger.y = attributes.y
-    
-    trigger.width = attributes.width
-    trigger.height = attributes.height
-
     trigger.containsPlayer = false
     trigger.lastContainsPlayer = false
-
     trigger.isTrigger = true
-    trigger.onTriggerEnter = attributes.onTriggerEnter
-    trigger.onTriggerExit = attributes.onTriggerExit
-    trigger.draw = attributes.draw
+
+    for i,v in pairs(attributes) do
+        trigger[i] = v
+    end
 
     trigger.overlaps = function(self, other)
         return self.x + self.width >= other.x

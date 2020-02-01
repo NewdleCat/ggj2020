@@ -17,7 +17,7 @@ function love.load()
         },
 	    [0x0000FF] = function (scene, x,y)
 	    	scene:addPlayer(
-                NewHeadPlayer(
+                NewPlayer(
                     (x-0.5)*scene.tileSize,
                     (y-0.5)*scene.tileSize))
 	    end,
@@ -28,13 +28,18 @@ function love.load()
                 y = y,
                 width = scene.tileSize,
                 height = scene.tileSize,
+                sprite = love.graphics.newImage("assets/robot.png"),
 
                 onTriggerEnter = function(self, other)
                     print("Enter", other)
                 end,
                 onTriggerExit = function(self, other)
                     print("Exit", other)
-                end
+                end,
+
+                draw = function (self, scene)
+                	love.graphics.draw(self.sprite, self.x - scene.camera.x,self.y - scene.camera.y)
+                end,
             })
         end,
         [0xFF0000] = NewDirectionalTile {
@@ -69,8 +74,8 @@ function love.load()
 end
 
 function love.update(dt)
-    UpdateButtons()
     Scene:update(dt)
+    UpdateButtons()
 end
 
 
