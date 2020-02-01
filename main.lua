@@ -43,8 +43,8 @@ function love.load()
 end
 
 function love.update(dt)
-    Scene:update(dt)
     UpdateButtons()
+    Scene:update(dt)
 end
 
 
