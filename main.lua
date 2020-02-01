@@ -2,6 +2,7 @@ require "Scene"
 require "player"
 require "GameScene"
 require "Tile"
+require "Tiles"
 require "Trigger"
 require "Checkpoint"
 
@@ -53,15 +54,7 @@ function love.load()
                 end,
             })
         end,
-        [0xFF0000] = NewDirectionalTile { -------------------------- SPIKES
-            drawable = love.graphics.newImage("assets/spikes1.png"),
-            isSolid = false,
-            onEnter = function(self, other)
-                if other.health then
-                    other.health = other.health - 1
-                end
-            end
-        },
+        [0xFF0000] = SpikeTile, ------------------------------------ SPIKES,
         [0XFFFF00] = function (scene, i, j) ------------------------ CHECKPOINT
             local x, y = scene:tileCoordToCoord(i, j)
             scene:add(NewCheckpoint(scene, x, y))

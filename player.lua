@@ -10,10 +10,12 @@ local doCameraMove = function(self, scene)
                 and self.direction < 0 then
             scene:moveCameraTo(scene.camera.x - Width, scene.camera.y)
         end
-        if self.y + self.height - scene.camera.y > Height then
+        if self.y + self.height - scene.camera.y > Height
+                and self.ySpeed > 0 then
             scene:moveCameraTo(scene.camera.x, scene.camera.y + Height)
         end
-        if self.y - scene.camera.y < 0 then
+        if self.y - scene.camera.y < 0 
+                and self.ySpeed < 0 then
             scene:moveCameraTo(scene.camera.x, scene.camera.y - Height)
         end
     end
@@ -200,13 +202,21 @@ function NewPlayer(x,y)
 
         doCameraMove(self, scene)
 
-        -- Call on enter on the tile behind you.
-        do
-            local tile = scene:coordToTile(
-                self.x + self.width / 2,
-                self.y + self.width / 2)
-            if tile and tile.onEnter then
-                tile:onEnter(self)
+        -- Call onTileStay on the tile behind you.
+        -- For spikes and shit
+
+        local startI, startJ = scene:coordToTileCoord(
+            self.x - self.width,
+            self.y - self.height)
+        local endI, endJ = scene:coordToTileCoord(
+            self.x + self.width,
+            self.y + self.height)
+        for i = startI, endI do
+            for j = startJ, endJ do
+                local tile = scene:getTile(i, j)
+                if tile and tile.onTileStay then
+                    tile:onTileStay(self, scene, i, j)
+                end
             end
         end
 
@@ -395,7 +405,19 @@ function NewHeadPlayer(x,y)
 
         doCameraMove(self, scene)
 
-        print(self.x, self.y)
+        -- Call onTileStay on the tiles behind you.
+        -- For spikes and shit
+        for m = -1, 1 do
+            for n = -1, 1 do
+                local i, j = scene:coordToTileCoord(
+                    self.x + m * scene.tileSize,
+                    self.y + n * scene.tileSize)
+                local tile = scene:getTile(i, j)
+                if tile and tile.onTileStay then
+                    tile:onTileStay(self, scene, i, j)
+                end
+            end
+        end
 
         -- Get deleted if you die.
         if self.health <= 0 then
