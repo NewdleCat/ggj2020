@@ -11,6 +11,9 @@ function NewTile(attributes)
         tile.isSolid = true
     end
 
+    tile.onCollision = attributes.onCollision
+    tile.onEnter = attributes.onEnter
+
     tile.drawTile = function(self, scene, i, j)
         local x, y = (i - 1) * scene.tileSize - scene.camera.x,
                      (j - 1) * scene.tileSize - scene.camera.y
@@ -36,6 +39,8 @@ function NewDirectionalTile(attributes)
     else
         tile.isSolid = true
     end
+    tile.onCollision = attributes.onCollision
+    tile.onEnter = attributes.onEnter
 
     tile.drawTile = function(self, scene, i, j)
         local x, y = (i - 1) * scene.tileSize - scene.camera.x,

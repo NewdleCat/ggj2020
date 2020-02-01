@@ -94,9 +94,12 @@ function NewGameScene()
         return self:getTile(self:coordToTileCoord(x, y))
     end
 
-    scene.isCollisionAt = function (self, x,y)
+    scene.getCollisionAt = function (self, x,y)
         local tile = self:coordToTile(x,y)
-        return tile ~= nil and tile.isSolid
+        if tile ~= nil and tile.isSolid then
+            return tile
+        end
+        return nil
     end
 
     local sceneDraw = scene.draw
