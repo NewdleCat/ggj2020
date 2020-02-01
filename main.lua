@@ -1,4 +1,3 @@
-
 require "Scene"
 
 local scene = NewScene()
@@ -25,5 +24,3 @@ function love.draw()
     love.graphics.setCanvas()
     love.graphics.draw(canvas)
 end
-
-
