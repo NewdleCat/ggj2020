@@ -4,10 +4,6 @@ function NewGameScene()
     scene.player = nil
     scene.tileSize = 64
     scene.skyColor = { 0, 1, 1 }
-    scene.camera = {
-        x = 0,
-        y = 0
-    }
 
     -- Tilemap should be a table with rgb color hex values as keys and either a
     -- function or table as a value. For example:
@@ -127,6 +123,7 @@ function NewGameScene()
             end
         end
     end
+
 
     return scene
 end

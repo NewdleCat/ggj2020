@@ -232,8 +232,17 @@ function GetSign(n)
     return 0
 end
 function Lerp(a,b,t) return (1-t)*a + t*b end
+function Slerp(a, b, t)
+    return a + (0.5 - math.cos(t * math.pi) * 0.5) * (b - a)
+end
 function DeltaLerp(a,b,t, dt) 
     return Lerp(a,b, 1 - t^(dt))
+end
+function Clamp(a, b, t)
+    return math.max(a, math.min(b, t))
+end
+function Clamp01(t)
+    return Clamp(0, 1, t)
 end
 
 function Contains(table, value)

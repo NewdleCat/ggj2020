@@ -16,8 +16,8 @@ function NewTile(attributes)
 
         love.graphics.draw(
             self.drawable,
-            i * scene.tileSize - self.offset,
-            j * scene.tileSize - self.offset)
+            i * scene.tileSize - self.offset - scene.camera.x,
+            j * scene.tileSize - self.offset - scene.camera.y)
     end
     
     return tile

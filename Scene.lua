@@ -2,6 +2,24 @@ function NewScene()
     local scene = {}
     scene.objects = {}
     scene.triggers = {}
+
+    scene.camera = {
+        x = 0,
+        y = 0
+    }
+    scene.endCamMovePos = {
+        x = 0,
+        y = 0
+    }
+    scene.startCamMovePos = {
+        x = 0,
+        y = 0
+    }
+    scene.startCamMoveTime = 0
+    scene.endCamMoveTime = 0
+    scene.time = 0
+    scene.defaultCamMoveDuration = 1
+    scene.isCameraMoving = false
     
     -- Use this function, don't add by using objects.
     scene.add = function(self, object)
@@ -43,6 +61,22 @@ function NewScene()
                 end
             end
         end
+
+        -- Move the camera
+        do
+            local t = (self.time - self.startCamMoveTime)
+                / (self.endCamMoveTime - self.startCamMoveTime)
+            self.isCameraMoving = t >= 0 and t <= 1
+            self.camera.x = Slerp(
+                self.startCamMovePos.x,
+                self.endCamMovePos.x,
+                Clamp01(t))
+            self.camera.y = Slerp(
+                self.startCamMovePos.y,
+                self.endCamMovePos.y,
+                Clamp01(t))
+        end
+        self.time = self.time + dt
     end
 
     scene.draw = function(self)
@@ -51,6 +85,18 @@ function NewScene()
                 v:draw(self)
             end
         end
+    end
+
+    scene.moveCameraTo = function(self, x, y, duration)
+        if duration == nil then
+            duration = self.defaultCamMoveDuration
+        end
+        self.startCamMovePos.x = self.camera.x
+        self.startCamMovePos.y = self.camera.y
+        self.endCamMovePos.x = x
+        self.endCamMovePos.y = y
+        self.startCamMoveTime = self.time
+        self.endCamMoveTime = self.time + duration
     end
 
     return scene

@@ -1,3 +1,24 @@
+
+local doCameraMove = function(self, scene)
+    -- Move the camera to the new area if necessary.
+    if not scene.isCameraMoving then
+        if self.x + self.width - scene.camera.x > Width
+                and self.direction > 0 then
+            scene:moveCameraTo(scene.camera.x + Width, scene.camera.y)
+        end
+        if self.x - scene.camera.x < 0
+                and self.direction < 0 then
+            scene:moveCameraTo(scene.camera.x - Width, scene.camera.y)
+        end
+        if self.y + self.height - scene.camera.y > Height then
+            scene:moveCameraTo(scene.camera.x, scene.camera.y + Height)
+        end
+        if self.y - scene.camera.y < 0 then
+            scene:moveCameraTo(scene.camera.x, scene.camera.y - Height)
+        end
+    end
+end
+
 function NewPlayer(x,y)
 	local self = {}
 	self.sprite = NewAnimatedSprite("assets/robotwalk.png")
@@ -123,12 +144,17 @@ function NewPlayer(x,y)
 		-- integrate x
 		self.x = self.x + self.xSpeed*dt
 
+        doCameraMove(self, scene)
 		return true
 	end
 
 	self.draw = function (self, scene)
 		love.graphics.setColor(1,1,1)
-		love.graphics.draw(self.sprite.source, self.sprite[math.floor(self.animIndex)], self.x,self.y, 0, self.direction,1, 32,32)
+		love.graphics.draw(
+            self.sprite.source,
+            self.sprite[math.floor(self.animIndex)],
+            self.x - scene.camera.x,self.y - scene.camera.y,
+            0, self.direction,1, 32,32)
 	end
 
 	return self
@@ -252,12 +278,17 @@ function NewHeadPlayer(x,y)
 		-- integrate x
 		self.x = self.x + self.xSpeed*dt
 
+        doCameraMove(self, scene)
 		return true
 	end
 
 	self.draw = function (self, scene)
 		love.graphics.setColor(1,1,1)
-		love.graphics.draw(self.sprite.source, self.sprite[math.floor(self.animIndex)], self.x,self.y, 0, self.direction,1, 32,48)
+		love.graphics.draw(
+            self.sprite.source,
+            self.sprite[math.floor(self.animIndex)],
+            self.x - scene.camera.x,self.y - scene.camera.y,
+            0, self.direction,1, 32,48)
 	end
 
 	return self
