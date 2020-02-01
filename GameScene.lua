@@ -1,7 +1,7 @@
 
 function NewGameScene()
     local scene = NewScene()
-
+    scene.player = nil
     scene.tileSize = 64
     scene.skyColor = { 0, 1, 1 }
     scene.camera = {
@@ -57,6 +57,12 @@ function NewGameScene()
         end
     end
 
+    -- use this to add a player
+    scene.addPlayer = function (self, player)
+        scene:add(player)
+        self.player = player
+    end
+
     -- Converts to a tile index, clipped to the map size.
     scene.coordToTileIndex = function(self, x, y)
         return math.min(math.max(math.floor(x
@@ -98,10 +104,8 @@ function NewGameScene()
         love.graphics.rectangle("fill", 0,0, Width,Height)
 
         sceneDraw(self)
-        local minI, minJ = self:coordToTileIndex(self.camera.x, self.camera.y)
-        local maxI, maxJ = self:coordToTileIndex(
-            self.camera.x + Width,
-            self.camera.y + Height)
+        local minI, minJ = self:coordToTileIndex(self.camera.x - self.tileSize, self.camera.y - self.tileSize)
+        local maxI, maxJ = self:coordToTileIndex(self.camera.x + Width + self.tileSize, self.camera.y + Height + self.tileSize)
 
         for i = minI, maxI do
             local row = self.mapTable[i]

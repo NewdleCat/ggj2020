@@ -12,7 +12,7 @@ function love.load()
 	Scene:setTileMap {
 	    [0xFF0000] = NewTile(love.graphics.newImage("assets/tile1.png"), 32),
 	    [0x0000FF] = function (scene, x,y)
-	    	scene:add(NewPlayer((x-0.5)*scene.tileSize,(y-0.5)*scene.tileSize))
+	    	scene:addPlayer(NewHeadPlayer((x-0.5)*scene.tileSize,(y-0.5)*scene.tileSize))
 	    end,
 	}
 
