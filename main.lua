@@ -17,7 +17,7 @@ function love.load()
         },
 	    [0x0000FF] = function (scene, x,y)
 	    	scene:addPlayer(
-                NewPlayer(
+                NewHeadPlayer(
                     (x-0.5)*scene.tileSize,
                     (y-0.5)*scene.tileSize))
 	    end,
