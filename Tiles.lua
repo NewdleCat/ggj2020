@@ -7,25 +7,25 @@ SpikeTile = NewTile {
         if other.health then
             if scene:isSolid(i, j + 1) then
                 if other.y + other.height
-                        >= y + self.drawable:getHeight() - 8 then
+                        >= y + self.drawable:getHeight() - 12 then
                     other.health = other.health - 1
                 end
             end
             if scene:isSolid(i, j - 1) then
                 if other.y + other.height
-                        <= y + 8 then
+                        <= y + 12 then
                     other.health = other.health - 1
                 end
             end
             if scene:isSolid(i + 1, j) then
                 if other.x + other.width
-                        >= x + self.drawable:getWidth() - 8 then
+                        >= x + self.drawable:getWidth() - 12 then
                     other.health = other.health - 1
                 end
             end
             if scene:isSolid(i - 1, j) then
                 if other.x + other.width
-                        <= x + 8 then
+                        <= x + 12 then
                     other.health = other.health - 1
                 end
             end
