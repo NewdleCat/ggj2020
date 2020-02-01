@@ -293,3 +293,6 @@ function NewHeadPlayer(x,y)
 
 	return self
 end
+
+function NewOneLegPlayer(x,y)
+end
