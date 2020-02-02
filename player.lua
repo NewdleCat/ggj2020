@@ -560,10 +560,18 @@ function NewOneLegPlayer(x,y)
 				self.animIndex = 1
 			end
 		else
-			if self.ySpeed < 0 then
-				self.animIndex = 6
+			if self.xSpeed >= 0 then
+				if self.ySpeed < 0 then
+					self.animIndex = 6
+				else
+					self.animIndex = 7
+				end
 			else
-				self.animIndex = 7
+				if self.ySpeed < 0 then
+					self.animIndex = 8
+				else
+					self.animIndex = 9
+				end
 			end
 		end
 	end
