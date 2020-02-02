@@ -12,20 +12,20 @@ require "Spawner"
 require "fallingstate"
 
 function love.load()
-	MapFile = "maps/testMap.png"
+	MapFile = "maps/joeymap11.png"
 	CameraStartingPixelX = 1
 	CameraStartingPixelY = 2
 
     Music = love.audio.newSource( 'music/sleep mode.mp3', 'static' )
     Music:setLooping(true) --the groove dont stop babey
-    Music:play()
 
     MusicBootup = love.audio.newSource('music/bootup.mp3', 'static')
     MusicBootup:setLooping(true)
     MusicDigital = love.audio.newSource('music/digital.mp3', 'static')
     MusicDigital:setLooping(true)
-    MusicVibeTime = love.audio.newSource('music/vibe time.mp3', 'static')
+    MusicVibeTime = love.audio.newSource('music/initialize.mp3', 'static')
     MusicVibeTime:setLooping(true)
+    MusicVibeTime:play()
 
     SfxLaserFire = love.audio.newSource('sfx/laserfire.mp3', 'static')
 	SfxCheckpoint = love.audio.newSource('sfx/checkpoint.wav', 'static')

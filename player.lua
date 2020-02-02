@@ -475,6 +475,7 @@ function NewHeadPlayer(x,y)
 
 			self.direction = 1
 			if onGround then
+	            SfxJump:play()
 				self.ySpeed = self.hopHeight
 			end
 			walking = true
@@ -490,6 +491,7 @@ function NewHeadPlayer(x,y)
 
 			self.direction = -1
 			if onGround then
+	            SfxJump:play()
 				self.ySpeed = self.hopHeight
 			end
 			walking = true
@@ -551,6 +553,7 @@ function NewHeadPlayer(x,y)
 
         -- Get deleted if you die.
         if self.health <= 0 then
+            SfxDeath:play()
             scene:onPlayerDie(self)
             scene:add(NewRobotCorpse(self))
             return false

@@ -16,11 +16,13 @@ function NewFallingScene()
 		else
 			if self.hitTimer == 0 then
 				ShakeScreen()
+				love.audio.stop()
 			end
 			self.hitTimer = self.hitTimer + dt
 
 			if not self.hit and self.hitTimer > 0.65 then
 				self.hit = true
+	            SfxDeath:play()
 
 				self.objects[#self.objects+1] = { sprite = DeathArmLeft, }
 				self.objects[#self.objects+1] = { sprite = DeathArmRight, }
@@ -54,6 +56,7 @@ function NewFallingScene()
 
 		if self.hitTimer > 5 then
 			ChangeScene(GameScene)
+		    Music:play()
             Scene:moveCameraTo(Scene.camera.x, Scene.camera.y + Height*2, 0.000001)
             Scene.player = Scene:add(NewHeadPlayer(Scene.camera.x + Width/2, Scene.camera.y + Height - 64*3))
 		end
