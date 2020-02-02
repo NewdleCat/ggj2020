@@ -6,6 +6,7 @@ require "Tile"
 require "Tiles"
 require "Trigger"
 require "Checkpoint"
+require "Spawner"
 
 function love.load()
     music = love.audio.newSource( 'music/sleep mode.mp3', 'static' )
@@ -18,9 +19,13 @@ function love.load()
 	Scene = NewGameScene()
 	love.graphics.setDefaultFilter("nearest")
 
-    SpriteRobotLeg = NewAnimatedSprite("assets/robotLeg.png")
-    SpriteRobotArms = NewAnimatedSprite("assets/robotArms.png")
-    SpriteRobotHead = NewAnimatedSprite("assets/robothead.png")
+    deathArmLeft = NewAnimatedSprite("assets/deathArmLeft.png")
+    deathArmRight = NewAnimatedSprite("assets/deathArmRight.png")
+    deathFootLeft = NewAnimatedSprite("assets/deathFootLeft.png")
+    deathFootRight = NewAnimatedSprite("assets/deathFootRight.png")
+    deathGear1 = NewAnimatedSprite("assets/deathGear1.png")
+    deathGear2 = NewAnimatedSprite("assets/deathGear2.png")
+    deathHead = NewAnimatedSprite("assets/deathHead.png")
 
 	-- Tilemap
 	-- Use scene.tileSize to change the tilesize.
@@ -73,9 +78,22 @@ function love.load()
 		        end,
         	})
         end,
+        [0x00FFFF] = NewSpawner(function(x, y)
+            return {
+                x = x,
+                y = y,
+                draw = function(self, scene)
+                    love.graphics.circle("fill",
+                        self.x - scene.camera.x,
+                        self.y - scene.camera.y,
+                        64)
+                end
+            }
+        end)
 	}
 
-	Scene:loadMap("maps/introtest-zach1.png")
+	Scene:loadMap("maps/joeymap7.png")
+    Scene:spawnPlayer()
 	Canvas = love.graphics.newCanvas(Width, Height)
 
 	local dw,dh = love.window.getDesktopDimensions()
