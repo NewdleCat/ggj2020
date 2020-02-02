@@ -10,10 +10,12 @@ function NewCheckpoint(scene, x, y)
         isSpawner = true,
 
         onTriggerEnter = function(self, scene, other)
+            SfxCheckpoint:play()
             scene.lastCheckpoint = self
         end,
 
         spawn = function(self, scene, constructor)
+            SfxRespawn:play()
             return scene:add(constructor(
                 self.x + 0.5 * scene.tileSize,
                 self.y + 0.5 * scene.tileSize))
@@ -38,4 +40,3 @@ function NewCheckpoint(scene, x, y)
     }
     return checkpoint
 end
-

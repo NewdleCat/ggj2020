@@ -57,6 +57,7 @@ function NewBodyTrigger(x,y, sprite, transformation, song, foundSprite)
         foundSprite = foundSprite,
 
         onTriggerEnter = function(self, scene, other)
+            SfxPickup:play()
             scene:transformPlayer(self.transformation)
             self.dead = true
             if Music ~= self.song then
