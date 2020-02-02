@@ -64,7 +64,6 @@ function NewBodyTrigger(x,y, sprite, transformation, song, foundSprite)
                 Music:stop()
                 Music = self.song
                 Music:stop()
-                Music:play()
             end
 
             scene:hudAdd(NewFoundHudObject(self.foundSprite))

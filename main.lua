@@ -12,7 +12,7 @@ require "Spawner"
 require "fallingstate"
 
 function love.load()
-	MapFile = "maps/joeymap12.png"
+	MapFile = "maps/joeymap100.png"
 	CameraStartingPixelX = 1
 	CameraStartingPixelY = 2
 
@@ -22,12 +22,12 @@ function love.load()
     MusicBootup:setLooping(true)
     MusicDigital = love.audio.newSource('music/digital.mp3', 'static')
     MusicDigital:setLooping(true)
-    MusicVibeTime = love.audio.newSource('music/vibe time.mp3', 'static')
+    MusicVibeTime = love.audio.newSource('music/initialize.mp3', 'static')
     MusicVibeTime:setLooping(true)
     MusicPalindroid = love.audio.newSource('music/palindroid.mp3', 'static')
     MusicPalindroid:setLooping(true)
 
-    Music = MusicSleepMode
+    Music = MusicVibeTime
     Music:stop()
     Music:play()
 
@@ -37,6 +37,8 @@ function love.load()
 	SfxJump = love.audio.newSource('sfx/Jump.wav', 'static')
 	SfxPickup = love.audio.newSource('sfx/pickup.wav', 'static')
 	SfxRespawn = love.audio.newSource('sfx/Respawn.wav', 'static')
+	SfxThud1 = love.audio.newSource('sfx/thud1.wav', 'static')
+	SfxThud2 = love.audio.newSource('sfx/thud2.wav', 'static')
 
 	Width = 64*24
 	Height = 64*14

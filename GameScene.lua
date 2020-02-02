@@ -167,7 +167,7 @@ function NewGameScene()
                 GameScene:setTileMap(TileMap)
                 GameScene:loadMap(MapFile)
                 Music:stop()
-                Music = MusicSleepMode
+                Music = MusicVibeTime
                 Music:stop()
                 Music:play()
             end
