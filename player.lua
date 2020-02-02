@@ -41,7 +41,7 @@ local doCameraMove = function(self, scene)
                 and self.ySpeed > 0 then
             self.xLastScreen = self.x
             self.yLastScreen = self.y
-            self.xNextScreen = self.x 
+            self.xNextScreen = self.x
             self.yNextScreen = scene.camera.y + Height + 32
             if canMove then
 	            scene:moveCameraTo(scene.camera.x, scene.camera.y + Height)
@@ -49,11 +49,11 @@ local doCameraMove = function(self, scene)
 	        end
             moved = true
         end
-        if self.y - scene.camera.y < 0 
+        if self.y - scene.camera.y < 0
                 and self.ySpeed < 0 then
             self.xLastScreen = self.x
             self.yLastScreen = self.y
-            self.xNextScreen = self.x 
+            self.xNextScreen = self.x
             self.yNextScreen = scene.camera.y - 32
             if canMove then
 	            scene:moveCameraTo(scene.camera.x, scene.camera.y - Height)
@@ -92,7 +92,7 @@ function NewPlayer(x,y)
     self.health = 1
     self.xLastScreen = x
     self.yLastScreen = y
-    self.xNextScreen = x 
+    self.xNextScreen = x
     self.yNextScreen = y
     self.hasArms = true
     self.onWall = false
@@ -160,6 +160,7 @@ function NewPlayer(x,y)
 				self.direction = self.wallDirection*-1
 			end
 
+            SfxJump:play()
 			IsTitleScreen = math.max(0, IsTitleScreen)
 			self.coyoteTime = 0
 		end
@@ -339,6 +340,7 @@ function NewPlayer(x,y)
         if self.health <= 0 then
             scene:add(NewRobotCorpse(self))
             scene:onPlayerDie(self)
+            SfxDeath:play()
             return false
         end
         if self.shouldDestroy then
@@ -386,7 +388,7 @@ function NewHeadPlayer(x,y)
     self.health = 1
     self.xLastScreen = x
     self.yLastScreen = y
-    self.xNextScreen = x 
+    self.xNextScreen = x
     self.yNextScreen = y
 
 	self.update = function (self, scene, dt)

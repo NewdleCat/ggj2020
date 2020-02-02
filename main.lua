@@ -28,6 +28,11 @@ function love.load()
     MusicVibeTime:setLooping(true)
 
     SfxLaserFire = love.audio.newSource('sfx/laserfire.mp3', 'static')
+	SfxCheckpoint = love.audio.newSource('sfx/checkpoint.wav', 'static')
+	SfxDeath = love.audio.newSource('sfx/death.wav', 'static')
+	SfxJump = love.audio.newSource('sfx/Jump.wav', 'static')
+	SfxPickup = love.audio.newSource('sfx/pickup.wav', 'static')
+	SfxRespawn = love.audio.newSource('sfx/Respawn.wav', 'static')
 
 	Width = 64*24
 	Height = 64*14
@@ -142,8 +147,8 @@ function love.load()
     JoystickSensitivity = 0.25
 
     ButtonsDown = {
-        ["right"] = false, 
-        ["left"] = false, 
+        ["right"] = false,
+        ["left"] = false,
         ["up"] = false,
         ["down"] = false,
         ["a"] = false,
@@ -206,7 +211,7 @@ end
 
 
 function GamepadExists()
-    return Gamepad ~= nil 
+    return Gamepad ~= nil
 end
 
 function ButtonPress(btn)
@@ -365,7 +370,7 @@ function Lerp(a,b,t) return (1-t)*a + t*b end
 function Slerp(a, b, t)
     return a + (0.5 - math.cos(t * math.pi) * 0.5) * (b - a)
 end
-function DeltaLerp(a,b,t, dt) 
+function DeltaLerp(a,b,t, dt)
     return Lerp(a,b, 1 - t^(dt))
 end
 function Clamp(a, b, t)
