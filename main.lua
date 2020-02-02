@@ -15,6 +15,9 @@ function love.load()
 	MapFile = "maps/joeymap100.png"
 	CameraStartingPixelX = 1
 	CameraStartingPixelY = 2
+	CollectedCount = 0
+	MaxCollectedCount = 0
+	Collectable = love.graphics.newImage("assets/collectable.png")
 
     Music = love.audio.newSource( 'music/sleep mode.mp3', 'static' )
     Music:setLooping(true) --the groove dont stop babey
@@ -133,6 +136,36 @@ function love.load()
             scene:add(NewShip(x, y))
         end,
         [0x00AAFF] = NewSpawner(NewEyeDude), ----------------------- EYE DUDE
+        [0xFF00FF] = function (scene, i, j)
+            local x, y = scene:tileCoordToCoord(i, j)
+        	scene:add(NewTrigger{
+		        x = x,
+		        y = y,
+		        width = 64,
+		        height = 64,
+		        sprite = Collectable,
+		        timer = 0,
+
+		        onTriggerEnter = function(self, scene, other)
+		        	CollectedCount = CollectedCount + 1
+		            self.dead = true
+		        end,
+		        onTriggerExit = function(self, scene, other)
+		        end,
+
+		        customUpdate = function (self, scene, dt)
+		            self.timer = self.timer + dt
+		        end,
+
+		        draw = function (self, scene)
+		            love.graphics.draw(self.sprite, self.x - scene.camera.x,self.y - scene.camera.y -16 + math.sin(self.timer)*12)
+		        end,
+
+		        init = function (self)
+		        	MaxCollectedCount = MaxCollectedCount + 1
+		        end,
+        	})
+        end,
 	}
 
 	GameScene:loadMap(MapFile)

@@ -16,6 +16,10 @@ function NewTrigger(attributes)
         trigger[i] = v
     end
 
+    if trigger.init then
+        trigger.init(trigger)
+    end
+
     trigger.overlaps = function(self, other)
         return self.x + self.width >= other.x
            and self.y + self.height >= other.y
