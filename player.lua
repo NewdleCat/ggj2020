@@ -203,10 +203,10 @@ function NewPlayer(x,y)
 		if ButtonIsDown("right") then
 			if self.xSpeed < maxWalkSpeed then
 				if onGround then
-					self.xSpeed = self.xSpeed + walkSpeed
+					self.xSpeed = self.xSpeed + walkSpeed*60*dt
 					self.direction = 1
 				else
-					self.xSpeed = self.xSpeed + inAirSpeed
+					self.xSpeed = self.xSpeed + inAirSpeed*60*dt
 				end
 			end
 			walking = true
@@ -217,10 +217,10 @@ function NewPlayer(x,y)
 		if ButtonIsDown("left") then
 			if self.xSpeed > -1*maxWalkSpeed then
 				if onGround then
-					self.xSpeed = self.xSpeed - walkSpeed
+					self.xSpeed = self.xSpeed - walkSpeed*60*dt
 					self.direction = -1
 				else
-					self.xSpeed = self.xSpeed - inAirSpeed
+					self.xSpeed = self.xSpeed - inAirSpeed*60*dt
 				end
 			end
 			walking = true
@@ -469,9 +469,9 @@ function NewHeadPlayer(x,y)
 		if ButtonIsDown("right") then
 			if self.xSpeed < maxWalkSpeed then
 				if onGround then
-					self.xSpeed = self.xSpeed + walkSpeed
+					self.xSpeed = self.xSpeed + walkSpeed*dt*60
 				else
-					self.xSpeed = self.xSpeed + inAirSpeed
+					self.xSpeed = self.xSpeed + inAirSpeed*dt*60
 				end
 			end
 
@@ -485,9 +485,9 @@ function NewHeadPlayer(x,y)
 		if ButtonIsDown("left") then
 			if self.xSpeed > -1*maxWalkSpeed then
 				if onGround then
-					self.xSpeed = self.xSpeed - walkSpeed
+					self.xSpeed = self.xSpeed - walkSpeed*dt*60
 				else
-					self.xSpeed = self.xSpeed - inAirSpeed
+					self.xSpeed = self.xSpeed - inAirSpeed*dt*60
 				end
 			end
 
