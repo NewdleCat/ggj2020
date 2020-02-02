@@ -6,6 +6,7 @@ require "Tile"
 require "Tiles"
 require "Trigger"
 require "Checkpoint"
+require "Spawner"
 
 function love.load()
     music = love.audio.newSource( 'music/sleep mode.mp3', 'static' )
@@ -60,10 +61,22 @@ function love.load()
         [0XFFFF00] = function (scene, i, j) ------------------------ CHECKPOINT
             local x, y = scene:tileCoordToCoord(i, j)
             scene:add(NewCheckpoint(scene, x, y))
-        end
+        end,
+        [0x00FFFF] = NewSpawner(function(x, y)
+            return {
+                x = x,
+                y = y,
+                draw = function(self, scene)
+                    love.graphics.circle("fill",
+                        self.x - scene.camera.x,
+                        self.y - scene.camera.y,
+                        64)
+                end
+            }
+        end)
 	}
 
-	Scene:loadMap("maps/joeymap2.png")
+	Scene:loadMap("maps/testMap.png")
     Scene:spawnPlayer()
 	Canvas = love.graphics.newCanvas(Width, Height)
 
