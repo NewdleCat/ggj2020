@@ -43,7 +43,7 @@ function NewTrigger(attributes)
     return trigger
 end
 
-function NewBodyTrigger(x,y, sprite, transformation)
+function NewBodyTrigger(x,y, sprite, transformation, song)
     local self = NewTrigger {
         x = x,
         y = y,
@@ -53,10 +53,17 @@ function NewBodyTrigger(x,y, sprite, transformation)
         transformation = transformation,
         animIndex = 1,
         timer = 0,
+        song = song,
 
         onTriggerEnter = function(self, scene, other)
             scene:transformPlayer(self.transformation)
             self.dead = true
+            if Music ~= self.song then
+                Music:stop()
+                Music = self.song
+                Music:stop()
+                Music:play()
+            end
         end,
         onTriggerExit = function(self, scene, other)
         end,

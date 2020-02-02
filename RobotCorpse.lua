@@ -22,17 +22,17 @@ function NewRobotCorpse(robot)
         }
     end
 
-    newParticle(deathArmLeft)
-    newParticle(deathArmRight)
-    newParticle(deathFootLeft)
-    newParticle(deathFootRight)
+    newParticle(DeathArmLeft)
+    newParticle(DeathArmRight)
+    newParticle(DeathFootLeft)
+    newParticle(DeathFootRight)
     for i = 1, 3 do
-        newParticle(deathGear1)
+        newParticle(DeathGear1)
     end
     for i = 1, 3 do
-        newParticle(deathGear2)
+        newParticle(DeathGear2)
     end
-    newParticle(deathHead)
+    newParticle(DeathHead)
 
     ret.draw = function(self, scene)
         love.graphics.setColor(1, 1, 1,
