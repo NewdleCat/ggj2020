@@ -9,9 +9,16 @@ require "Checkpoint"
 require "Spawner"
 
 function love.load()
-    music = love.audio.newSource( 'music/sleep mode.mp3', 'static' )
-    music:setLooping( true ) --the groove dont stop babey
-    music:play()
+    Music = love.audio.newSource( 'music/sleep mode.mp3', 'static' )
+    Music:setLooping(true) --the groove dont stop babey
+    Music:play()
+
+    MusicBootup = love.audio.newSource('music/bootup.mp3', 'static')
+    MusicBootup:setLooping(true)
+    MusicDigital = love.audio.newSource('music/digital.mp3', 'static')
+    MusicDigital:setLooping(true)
+    MusicVibeTime = love.audio.newSource('music/vibe time.mp3', 'static')
+    MusicVibeTime:setLooping(true)
 
 	Width = 64*24
 	Height = 64*14
@@ -19,13 +26,13 @@ function love.load()
 	Scene = NewGameScene()
 	love.graphics.setDefaultFilter("nearest")
 
-    deathArmLeft = NewAnimatedSprite("assets/deathArmLeft.png")
-    deathArmRight = NewAnimatedSprite("assets/deathArmRight.png")
-    deathFootLeft = NewAnimatedSprite("assets/deathFootLeft.png")
-    deathFootRight = NewAnimatedSprite("assets/deathFootRight.png")
-    deathGear1 = NewAnimatedSprite("assets/deathGear1.png")
-    deathGear2 = NewAnimatedSprite("assets/deathGear2.png")
-    deathHead = NewAnimatedSprite("assets/deathHead.png")
+    DeathArmLeft = NewAnimatedSprite("assets/deathArmLeft.png")
+    DeathArmRight = NewAnimatedSprite("assets/deathArmRight.png")
+    DeathFootLeft = NewAnimatedSprite("assets/deathFootLeft.png")
+    DeathFootRight = NewAnimatedSprite("assets/deathFootRight.png")
+    DeathGear1 = NewAnimatedSprite("assets/deathGear1.png")
+    DeathGear2 = NewAnimatedSprite("assets/deathGear2.png")
+    DeathHead = NewAnimatedSprite("assets/deathHead.png")
 
 	-- Tilemap
 	-- Use scene.tileSize to change the tilesize.
@@ -47,15 +54,24 @@ function love.load()
 	    end,
         [0x00FF00] = function (scene, i, j) ------------------------ ROBOT LEG AND BODY
             local x, y = scene:tileCoordToCoord(i, j)
-            scene:add(NewBodyTrigger(x,y, NewAnimatedSprite("assets/bodypickup1.png"), NewOneLegPlayer))
+            scene:add(NewBodyTrigger(x,y,
+                NewAnimatedSprite("assets/bodypickup1.png"),
+                NewOneLegPlayer,
+                MusicBootup))
         end,
         [0x00EB00] = function (scene, i, j) ------------------------ ROBOT LEG 2
             local x, y = scene:tileCoordToCoord(i, j)
-            scene:add(NewBodyTrigger(x,y, NewAnimatedSprite("assets/bodypickup2.png"), NewArmlessPlayer))
+            scene:add(NewBodyTrigger(x,y,
+                NewAnimatedSprite("assets/bodypickup2.png"),
+                NewArmlessPlayer,
+                MusicDigital))
         end,
         [0x00D700] = function (scene, i, j) ------------------------ ROBOT NORMAL
             local x, y = scene:tileCoordToCoord(i, j)
-            scene:add(NewBodyTrigger(x,y, NewAnimatedSprite("assets/bodypickup3.png"), NewPlayer))
+            scene:add(NewBodyTrigger(x,y,
+                NewAnimatedSprite("assets/bodypickup3.png"),
+                NewPlayer,
+                MusicVibeTime))
         end,
         [0xFF0000] = SpikeTile, ------------------------------------ SPIKES,
         [0XFFFF00] = function (scene, i, j) ------------------------ CHECKPOINT
