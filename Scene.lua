@@ -94,16 +94,22 @@ function NewScene()
         if duration == nil then
             duration = self.defaultCamMoveDuration
         end
-        self.startCamMovePos.x = self.camera.x
-        self.startCamMovePos.y = self.camera.y
-        self.endCamMovePos.x = x
-        self.endCamMovePos.y = y
-        self.startCamMoveTime = self.time
-        self.endCamMoveTime = self.time + duration
-
-        -- Kinda hacky but whatever lol
-        if duration == 0 then
+        if duration > 0 then
+            self.startCamMovePos.x = self.camera.x
+            self.startCamMovePos.y = self.camera.y
+            self.endCamMovePos.x = x
+            self.endCamMovePos.y = y
+            self.startCamMoveTime = self.time
+            self.endCamMoveTime = self.time + duration
+        else
+            self.startCamMovePos.x = x
+            self.startCamMovePos.y = y
+            self.endCamMovePos.x = x
+            self.endCamMovePos.y = y
             self.startCamMoveTime = self.time - 1
+            self.endCamMoveTime = self.time + duration
+            self.camera.x = x
+            self.camera.y = y
         end
     end
 

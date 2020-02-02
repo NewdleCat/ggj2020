@@ -4,9 +4,9 @@ SpikeTile = NewTile {
     isSolid = false,
     onTileStay = function(self, other, scene, i, j)
         local x, y = scene:tileCoordToCoord(i, j)
-        if other.x >= x and other.y >= y
-            and other.x + other.width <= x + scene.tileSize
-            and other.y + other.height <= x + scene.tileSize then
+        if other.x + other.width >= x and other.y + other.height >= y
+            and other.x - other.width <= x + scene.tileSize
+            and other.y - other.height <= y + scene.tileSize then
         else
             return
         end
