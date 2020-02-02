@@ -56,7 +56,9 @@ function NewFallingScene()
 
 		if self.hitTimer > 5 then
 			ChangeScene(GameScene)
-		    Music:play()
+            Music:stop()
+		    Music = MusicSleepMode
+            Music:play()
             Scene:moveCameraTo(Scene.camera.x, Scene.camera.y + Height*2, 0.000001)
             Scene.player = Scene:add(NewHeadPlayer(Scene.camera.x + Width/2, Scene.camera.y + Height - 64*3))
 		end
