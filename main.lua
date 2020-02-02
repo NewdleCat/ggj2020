@@ -33,6 +33,8 @@ function love.load()
 	SfxJump = love.audio.newSource('sfx/Jump.wav', 'static')
 	SfxPickup = love.audio.newSource('sfx/pickup.wav', 'static')
 	SfxRespawn = love.audio.newSource('sfx/Respawn.wav', 'static')
+	SfxThud1 = love.audio.newSource('sfx/thud1.wav', 'static')
+	SfxThud2 = love.audio.newSource('sfx/thud2.wav', 'static')
 
 	Width = 64*24
 	Height = 64*14

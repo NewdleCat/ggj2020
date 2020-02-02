@@ -110,11 +110,11 @@ function NewScene()
         local minY = math.min(self.camera.y, self.endCamMovePos.y)
         local maxY = math.max(self.camera.y, self.endCamMovePos.y)
 
-        if obj.x - minX < -obj.width 
+        if obj.x - minX < -obj.width
                 or obj.x - maxX > Width + obj.width then
             return false
         end
-        if obj.y - minY < -obj.height 
+        if obj.y - minY < -obj.height
                 or obj.y - maxY > Height + obj.height then
             return false
         end
@@ -132,7 +132,7 @@ function NewScene()
             self.startCamMovePos = {} end
         if not self.endCamMovePos then
             self.endCamMovePos = {} end
-        
+
         if duration > 0 then
             self.startCamMovePos.x = self.camera.x
             self.startCamMovePos.y = self.camera.y
@@ -158,7 +158,7 @@ function NewScene()
         local endI, endJ = scene:coordToTileIndex(
             self.endCamMovePos.x + Width,
             self.endCamMovePos.y + Height)
-        
+
         if useSpawners then
             if self.getTile then
                 for i = startI, endI do
@@ -238,6 +238,7 @@ function NewFoundHudObject(sprite)
         self.timer = self.timer + dt
         if self.timer >= 1.8 + 1/2.4 and lastTimer < 1.8 + 1/2.4 then
             ShakeScreen()
+            SfxThud2:play()
         end
         return self.timer < self.maxTimer, true
     end
