@@ -1,3 +1,4 @@
+require "Enemies"
 require "RobotCorpse"
 require "Scene"
 require "player"
@@ -20,6 +21,8 @@ function love.load()
     MusicVibeTime = love.audio.newSource('music/vibe time.mp3', 'static')
     MusicVibeTime:setLooping(true)
 
+    SfxLaserFire = love.audio.newSource('sfx/laserfire.mp3', 'static')
+
 	Width = 64*24
 	Height = 64*14
 
@@ -33,6 +36,9 @@ function love.load()
     DeathGear1 = NewAnimatedSprite("assets/deathGear1.png")
     DeathGear2 = NewAnimatedSprite("assets/deathGear2.png")
     DeathHead = NewAnimatedSprite("assets/deathHead.png")
+
+    MikeSprite = NewAnimatedSprite("assets/mike.png")
+    LaserSprite = NewAnimatedSprite("assets/laser.png")
 
 	-- Tilemap
 	-- Use scene.tileSize to change the tilesize.
@@ -94,21 +100,10 @@ function love.load()
 		        end,
         	})
         end,
-        [0x00FFFF] = NewSpawner(function(x, y)
-            return {
-                x = x,
-                y = y,
-                draw = function(self, scene)
-                    love.graphics.circle("fill",
-                        self.x - scene.camera.x,
-                        self.y - scene.camera.y,
-                        64)
-                end
-            }
-        end)
+        [0x00FFFF] = NewSpawner(NewMike)
 	}
 
-	Scene:loadMap("maps/joeymap7-zach1.png")
+	Scene:loadMap("maps/testMap.png")
 	Canvas = love.graphics.newCanvas(Width, Height)
 
 	local dw,dh = love.window.getDesktopDimensions()

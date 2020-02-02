@@ -7,14 +7,6 @@ function NewScene()
         x = 0,
         y = 0
     }
-    scene.endCamMovePos = {
-        x = 0,
-        y = 0
-    }
-    scene.startCamMovePos = {
-        x = 0,
-        y = 0
-    }
     scene.startCamMoveTime = 0
     scene.endCamMoveTime = 0
     scene.time = 0
@@ -75,15 +67,17 @@ function NewScene()
         if self.moveWithCameraFunction and self.isCameraMoving then
             self.moveWithCameraFunction(self, t)
         end
-        self.camera.x = Slerp(
-            self.startCamMovePos.x,
-            self.endCamMovePos.x,
-            Clamp01(t))
-        self.camera.y = Slerp(
-            self.startCamMovePos.y,
-            self.endCamMovePos.y,
-            Clamp01(t))
-        self.time = self.time + dt
+        if self.startCamMovePos then
+            self.camera.x = Slerp(
+                self.startCamMovePos.x,
+                self.endCamMovePos.x,
+                Clamp01(t))
+            self.camera.y = Slerp(
+                self.startCamMovePos.y,
+                self.endCamMovePos.y,
+                Clamp01(t))
+            self.time = self.time + dt
+        end
     end
 
     scene.draw = function(self)
@@ -94,10 +88,30 @@ function NewScene()
         end
     end
 
+    scene.isVisible = function(self, obj)
+        if obj.x - self.camera.x < -obj.width 
+                or obj.x - self.camera.x > Width + obj.width then
+            return false
+        end
+        if obj.y - self.camera.y < -obj.height 
+                or obj.y - self.camera.y > Height + obj.height then
+            return false
+        end
+        return true
+    end
+
     scene.moveCameraTo = function(self, x, y, duration)
         if duration == nil then
             duration = self.defaultCamMoveDuration
         end
+        local useSpawners = not self.endCamMovePos or x ~= self.endCamMovePos.x
+            and y ~= self.endCamMovePos.y
+
+        if not self.startCamMovePos then
+            self.startCamMovePos = {} end
+        if not self.endCamMovePos then
+            self.endCamMovePos = {} end
+        
         if duration > 0 then
             self.startCamMovePos.x = self.camera.x
             self.startCamMovePos.y = self.camera.y
@@ -124,12 +138,14 @@ function NewScene()
             self.camera.x + Width,
             self.camera.y + Height)
         
-        if self.getTile then
-            for i = startI, endI do
-                for j = startJ, endJ do
-                    local tile = self:getTile(i, j)
-                    if tile and tile.isSpawner then
-                        tile:spawn(self, i, j)
+        if useSpawners then
+            if self.getTile then
+                for i = startI, endI do
+                    for j = startJ, endJ do
+                        local tile = self:getTile(i, j)
+                        if tile and tile.isSpawner then
+                            tile:spawn(self, i, j)
+                        end
                     end
                 end
             end
