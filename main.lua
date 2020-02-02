@@ -108,7 +108,7 @@ function love.load()
         end)
 	}
 
-	Scene:loadMap("maps/joeymap7-zach1.png")
+	Scene:loadMap("maps/joeymap10.png")
 	Canvas = love.graphics.newCanvas(Width, Height)
 
 	local dw,dh = love.window.getDesktopDimensions()
