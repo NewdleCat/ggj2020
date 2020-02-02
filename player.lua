@@ -37,11 +37,11 @@ function NewPlayer(x,y)
     self.health = 1
 
 	self.update = function (self, scene, dt)
-		local maxWalkSpeed = 200
+		local maxWalkSpeed = 220
 		local walkSpeed = 60
-		local inAirSpeed = 15
+		local inAirSpeed = 10
 		local friction = 0.5
-		local jumpSpeed = -550
+		local jumpSpeed = -620
 
 		self.coyoteTime = math.max(self.coyoteTime-dt, 0)
 
@@ -49,7 +49,7 @@ function NewPlayer(x,y)
 		if self.ySpeed > 0 then
 			self.ySpeed = self.ySpeed + dt*4000
 		else
-			self.ySpeed = self.ySpeed + dt*2000
+			self.ySpeed = self.ySpeed + dt*1500
 		end
 
 		-- floor collision
