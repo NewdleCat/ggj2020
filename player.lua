@@ -222,6 +222,7 @@ function NewPlayer(x,y)
 
         -- Get deleted if you die.
         if self.health <= 0 then
+            scene:add(NewRobotCorpse(self))
             scene:onPlayerDie(self)
             return false
         end
@@ -422,6 +423,7 @@ function NewHeadPlayer(x,y)
         -- Get deleted if you die.
         if self.health <= 0 then
             scene:onPlayerDie(self)
+            scene:add(NewRobotCorpse(self))
             return false
         end
 		return true
