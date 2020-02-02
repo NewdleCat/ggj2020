@@ -43,6 +43,7 @@ function love.load()
     ScreenShake = 0
 
     MikeSprite = NewAnimatedSprite("assets/mike.png")
+    EyeDudeSprite = NewAnimatedSprite("assets/eyeDude.png")
     LaserSprite = NewAnimatedSprite("assets/laser.png")
 
 	-- Tilemap
@@ -110,6 +111,7 @@ function love.load()
         	drawable = NewAnimatedSprite("assets/ship.png"),
         	isAnimated = true,
         },
+        [0x00AAFF] = NewSpawner(NewEyeDude),
 	}
 
 	Scene:loadMap("maps/intromap.png")
