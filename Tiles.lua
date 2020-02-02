@@ -4,30 +4,36 @@ SpikeTile = NewTile {
     isSolid = false,
     onTileStay = function(self, other, scene, i, j)
         local x, y = scene:tileCoordToCoord(i, j)
+        if other.x >= x and other.y >= y
+            and other.x + other.width <= x + scene.tileSize
+            and other.y + other.height <= x + scene.tileSize then
+        else
+            return
+        end
         if other.health then
             if scene:isSolid(i, j + 1) then
                 if other.y + other.height
-                        >= y + self.drawable:getHeight() - 16
-                        and other.ySpeed > 0 then
+                        >= y + self.drawable:getHeight() - 8
+                        and other.ySpeed >= 0 then
                     other.health = other.health - 1
                 end
             end
             if scene:isSolid(i, j - 1) then
-                if other.y - other.height <= y + 16
-                        and other.ySpeed < 0 then
+                if other.y - other.height <= y + 8
+                        and other.ySpeed <= 0 then
                     other.health = other.health - 1
                 end
             end
             if scene:isSolid(i + 1, j) then
                 if other.x + other.width
-                        >= x + self.drawable:getWidth() - 16
-                        and other.xSpeed > 0 then
+                        >= x + self.drawable:getWidth() - 8
+                        and other.xSpeed >= 0 then
                     other.health = other.health - 1
                 end
             end
             if scene:isSolid(i - 1, j) then
-                if other.x - other.width <= x + 16
-                        and other.xSpeed > 0 then
+                if other.x - other.width <= x + 8
+                        and other.xSpeed >= 0 then
                     other.health = other.health - 1
                 end
             end
