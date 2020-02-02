@@ -1,22 +1,47 @@
 
 local doCameraMove = function(self, scene)
     -- Move the camera to the new area if necessary.
+    local moveWithCameraFunction = function (scene, timer)
+    	scene.player.x = Lerp(scene.player.xLastScreen, scene.player.xNextScreen, timer)
+    	scene.player.y = Lerp(scene.player.yLastScreen, scene.player.yNextScreen, timer)
+    end
+
     if not scene.isCameraMoving then
         if self.x + self.width - scene.camera.x > Width
                 and self.direction > 0 then
+            self.xLastScreen = self.x
+            self.yLastScreen = self.y
+            self.xNextScreen = scene.camera.x + Width + 32
+            self.yNextScreen = self.y
             scene:moveCameraTo(scene.camera.x + Width, scene.camera.y)
+            scene.moveWithCameraFunction = moveWithCameraFunction
         end
         if self.x - scene.camera.x < 0
                 and self.direction < 0 then
+            self.xLastScreen = self.x
+            self.yLastScreen = self.y
+            self.xNextScreen = scene.camera.x - 32
+            self.yNextScreen = self.y
             scene:moveCameraTo(scene.camera.x - Width, scene.camera.y)
+            scene.moveWithCameraFunction = moveWithCameraFunction
         end
         if self.y + self.height - scene.camera.y > Height
                 and self.ySpeed > 0 then
+            self.xLastScreen = self.x
+            self.yLastScreen = self.y
+            self.xNextScreen = self.x 
+            self.yNextScreen = scene.camera.y + Height + 32
             scene:moveCameraTo(scene.camera.x, scene.camera.y + Height)
+            scene.moveWithCameraFunction = moveWithCameraFunction
         end
         if self.y - scene.camera.y < 0 
                 and self.ySpeed < 0 then
+            self.xLastScreen = self.x
+            self.yLastScreen = self.y
+            self.xNextScreen = self.x 
+            self.yNextScreen = scene.camera.y - 32
             scene:moveCameraTo(scene.camera.x, scene.camera.y - Height)
+            scene.moveWithCameraFunction = moveWithCameraFunction
         end
     end
 end
@@ -35,6 +60,11 @@ function NewPlayer(x,y)
 	self.coyoteTime = 0
     self.isPlayer = true
     self.health = 1
+    self.xLastScreen = x
+    self.yLastScreen = y
+    self.xNextScreen = x 
+    self.yNextScreen = y
+    self.hasArms = true
 
 	self.update = function (self, scene, dt)
 		local maxWalkSpeed = 220
@@ -257,7 +287,7 @@ function NewHeadPlayer(x,y)
 	self.upGrav = 800
 	self.downGrav = 4000
 	self.headspace = 8
-	self.maxWalkSpeed = 120
+	self.maxWalkSpeed = 170
 	self.walkSpeed = 40
 	self.inAirSpeed = 15
     self.isPlayer = true
@@ -466,8 +496,8 @@ end
 function NewOneLegPlayer(x,y)
 	local self = NewHeadPlayer(x,y)
 	self.sprite = NewAnimatedSprite("assets/robotwalkOneLeg.png")
-	self.hopHeight = -550
-	self.upGrav = 2000
+	self.hopHeight = -450
+	self.upGrav = 1200
 	self.downGrav = 4000
 	self.headspace = 10
 	self.height = 32
@@ -485,6 +515,14 @@ function NewOneLegPlayer(x,y)
             self.x - scene.camera.x,self.y - scene.camera.y,
             0, self.direction,1, 32,32)
 	end
+
+	return self
+end
+
+function NewArmlessPlayer(x,y)
+	local self = NewPlayer(x,y)
+	self.hasArms = false
+	self.sprite = NewAnimatedSprite("assets/robotArmless.png")
 
 	return self
 end

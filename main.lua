@@ -44,6 +44,14 @@ function love.load()
             local x, y = scene:tileCoordToCoord(i, j)
             scene:add(NewBodyTrigger(x,y, NewAnimatedSprite("assets/bodypickup1.png"), NewOneLegPlayer))
         end,
+        [0x00EB00] = function (scene, i, j) ------------------------ ROBOT LEG 2
+            local x, y = scene:tileCoordToCoord(i, j)
+            scene:add(NewBodyTrigger(x,y, NewAnimatedSprite("assets/bodypickup2.png"), NewArmlessPlayer))
+        end,
+        [0x00D700] = function (scene, i, j) ------------------------ ROBOT NORMAL
+            local x, y = scene:tileCoordToCoord(i, j)
+            scene:add(NewBodyTrigger(x,y, NewAnimatedSprite("assets/bodypickup3.png"), NewPlayer))
+        end,
         [0xFF0000] = SpikeTile, ------------------------------------ SPIKES,
         [0XFFFF00] = function (scene, i, j) ------------------------ CHECKPOINT
             local x, y = scene:tileCoordToCoord(i, j)

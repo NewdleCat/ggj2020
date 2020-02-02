@@ -5,7 +5,7 @@ function NewGameScene()
     scene.tileSize = 64
     scene.skyColor = { 0, 1, 1 }
     scene.lastCheckpoint = nil
-    scene.playerConstructor = NewPlayer
+    scene.playerConstructor = NewHeadPlayer
     scene.background = love.graphics.newImage("assets/bg2.png")
     scene.backgroundTimer = 0
 
@@ -174,7 +174,8 @@ function NewGameScene()
     scene.transformPlayer = function (self, newplayer)
         self.playerConstructor = newplayer
         self.player.dead = true
-        self.player = self:add(self.playerConstructor(math.floor(self.player.x/self.tileSize)*self.tileSize +self.tileSize/2,math.floor(self.player.y/self.tileSize)*self.tileSize + self.tileSize/2))
+        --self.player = self:add(self.playerConstructor(math.floor(self.player.x/self.tileSize)*self.tileSize +self.tileSize/2,math.floor(self.player.y/self.tileSize)*self.tileSize + self.tileSize/2))
+        self.player = self:add(self.playerConstructor(self.player.x,self.player.y))
     end
 
     return scene
