@@ -5,7 +5,7 @@ function NewGameScene()
     scene.tileSize = 64
     scene.skyColor = { 0, 1, 1 }
     scene.lastCheckpoint = nil
-    scene.playerConstructor = NewHeadPlayer
+    scene.playerConstructor = NewPlayer
     scene.background = love.graphics.newImage("assets/bg3.png")
     scene.backgroundTimer = 0
     scene.respawnWaitDuration = 1
@@ -195,6 +195,7 @@ function NewGameScene()
     scene.onPlayerDie = function(self, player)
         self.playerTimeOfDeath = self.time
         self.player = nil
+        ShakeScreen()
     end
 
     scene.spawnPlayer = function(self)
