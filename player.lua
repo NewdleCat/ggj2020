@@ -222,6 +222,7 @@ function NewPlayer(x,y)
 
         -- Get deleted if you die.
         if self.health <= 0 then
+            scene:add(NewRobotCorpse(self))
             scene:onPlayerDie(self)
             return false
         end
@@ -405,6 +406,7 @@ function NewHeadPlayer(x,y)
 
         doCameraMove(self, scene)
 
+        --print(self.x, self.y)
         -- Call onTileStay on the tiles behind you.
         -- For spikes and shit
         for m = -1, 1 do
@@ -422,6 +424,7 @@ function NewHeadPlayer(x,y)
         -- Get deleted if you die.
         if self.health <= 0 then
             scene:onPlayerDie(self)
+            scene:add(NewRobotCorpse(self))
             return false
         end
 		return true
@@ -462,7 +465,7 @@ end
 
 function NewOneLegPlayer(x,y)
 	local self = NewHeadPlayer(x,y)
-	self.sprite = NewAnimatedSprite("assets/robotOneLeg.png")
+	self.sprite = NewAnimatedSprite("assets/robotwalkOneLeg.png")
 	self.hopHeight = -550
 	self.upGrav = 2000
 	self.downGrav = 4000

@@ -48,7 +48,7 @@ function NewScene()
         if not self.isCameraMoving then
             while i <= #self.objects do
                 local object = self.objects[i]
-                if not object.update or object:update(self, dt) then
+                if (not object.update or object:update(self, dt)) and not object.dead then
                     i=i+1
                 else
                     table.remove(self.objects, i)

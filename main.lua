@@ -1,3 +1,4 @@
+require "RobotCorpse"
 require "Scene"
 require "player"
 require "GameScene"
@@ -17,6 +18,10 @@ function love.load()
 	Scene = NewGameScene()
 	love.graphics.setDefaultFilter("nearest")
 
+    SpriteRobotLeg = NewAnimatedSprite("assets/robotLeg.png")
+    SpriteRobotArms = NewAnimatedSprite("assets/robotArms.png")
+    SpriteRobotHead = NewAnimatedSprite("assets/robothead.png")
+
 	-- Tilemap
 	-- Use scene.tileSize to change the tilesize.
 	Scene:setTileMap {
@@ -30,32 +35,14 @@ function love.load()
                 x = x,
                 y = y,
                 spawn = function(self, scene, constructor)
-                    return scene:add(constructor(
-                        self.x + 0.5 * scene.tileSize,
-                        self.y + 0.5 * scene.tileSize))
+                	scene.player = scene:add(constructor(self.x + 0.5 * scene.tileSize, self.y + 0.5 * scene.tileSize))
+                    return scene.player
                 end
             }
 	    end,
         [0x00FF00] = function (scene, i, j) ------------------------ ROBOT LEG AND BODY
             local x, y = scene:tileCoordToCoord(i, j)
-            scene:add(NewTrigger {
-                x = x,
-                y = y,
-                width = scene.tileSize,
-                height = scene.tileSize,
-                sprite = love.graphics.newImage("assets/robotLegAndBody.png"),
-
-                onTriggerEnter = function(self, scene, other)
-                    print("Enter", other)
-                end,
-                onTriggerExit = function(self, scene, other)
-                    print("Exit", other)
-                end,
-
-                draw = function (self, scene)
-                	love.graphics.draw(self.sprite, self.x - scene.camera.x,self.y - scene.camera.y)
-                end,
-            })
+            scene:add(NewBodyTrigger(x,y, NewAnimatedSprite("assets/bodypickup1.png"), NewOneLegPlayer))
         end,
         [0xFF0000] = SpikeTile, ------------------------------------ SPIKES,
         [0XFFFF00] = function (scene, i, j) ------------------------ CHECKPOINT
@@ -88,6 +75,22 @@ function love.load()
         ["start"] = false,
         ["jump"] = false,
     }
+
+    BackgroundGradientShader = love.graphics.newShader[[
+    	number lerp(number a, number b, number t)
+    	{
+    		return (1.0-t)*a/255.0 + t*b/255.0;
+    	}
+
+		vec4 effect(vec4 color, Image tex, vec2 texture_coords, vec2 screen_coords)
+		{
+		    return vec4(lerp(92.0, 51.0, texture_coords.y),lerp(38.0, 0.0, texture_coords.y),lerp(212.0, 103.0, texture_coords.y),1);
+		}
+  	]]
+  	FullCanvas = love.graphics.newCanvas(Width,Height)
+  	love.graphics.setCanvas(FullCanvas)
+  	love.graphics.clear(1,1,1,1)
+  	love.graphics.setCanvas()
 end
 
 function love.update(dt)
@@ -98,6 +101,7 @@ end
 
 function love.draw()
     love.graphics.setCanvas(Canvas)
+    love.graphics.clear(0,0,0,0)
     Scene:draw()
     love.graphics.setCanvas()
     local scale = math.min(love.graphics.getWidth()/Width,love.graphics.getHeight()/Height)

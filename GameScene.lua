@@ -6,7 +6,8 @@ function NewGameScene()
     scene.skyColor = { 0, 1, 1 }
     scene.lastCheckpoint = nil
     scene.playerConstructor = NewPlayer
-    scene.backtile = love.graphics.newImage("assets/background1.png")
+    scene.background = love.graphics.newImage("assets/bg2.png")
+    scene.backgroundTimer = 0
 
     -- Tilemap should be a table with rgb color hex values as keys and either a
     -- function or table as a value. For example:
@@ -119,25 +120,24 @@ function NewGameScene()
         return nil
     end
 
-    backx = 0
-    backy = 0
     scene.parentUpdate = scene.update
     scene.update = function(self, dt)
         self:parentUpdate(dt)
-        backx = (backx + 1)%128
-        backy = (backy + 1)%128
+        self.backgroundTimer = self.backgroundTimer + dt
     end
 
     local sceneDraw = scene.draw
     scene.draw = function(self)
-   --     love.graphics.setColor(
-   --         self.skyColor[1],
-   --         self.skyColor[2],
-   --         self.skyColor[3])
-   --     love.graphics.rectangle("fill", 0,0, Width,Height)
-        for i = -1,10 do
-            for j = -1,10 do
-                love.graphics.draw(scene.backtile, i*128 + backx, j*128 - backy)
+        love.graphics.setColor(1,1,1)
+        love.graphics.setShader(BackgroundGradientShader)
+        love.graphics.draw(FullCanvas)
+        love.graphics.setShader()
+        local background = self.background
+        local bgSize = background:getWidth()
+        local bgDir = math.pi*0.25
+        for i=0, math.ceil(Width/bgSize) +1 do
+            for j=0, math.ceil(Height/bgSize) +1 do
+                love.graphics.draw(background,math.floor((i-1)*bgSize + self.backgroundTimer*24*math.cos(bgDir)%bgSize),math.floor((j-1)*bgSize + self.backgroundTimer*24*math.sin(bgDir)%bgSize))
             end
         end
 
@@ -171,6 +171,11 @@ function NewGameScene()
             0)
     end
 
+    scene.transformPlayer = function (self, newplayer)
+        self.playerConstructor = newplayer
+        self.player.dead = true
+        self.player = self:add(self.playerConstructor(math.floor(self.player.x/self.tileSize)*self.tileSize +self.tileSize/2,math.floor(self.player.y/self.tileSize)*self.tileSize + self.tileSize/2))
+    end
+
     return scene
 end
-
