@@ -625,13 +625,15 @@ function NewPlayerSpawnAnimation(x,y)
 	end
 
 	self.draw = function (self, scene)
-		local t = self.timer/self.maxTimer
-		love.graphics.setColor(1,1,0.2, Lerp(0.9,0, t))
-		local x = scene.player.x - scene.camera.x
-		local width = Lerp(20,1, t)
-		width = width^2
-		love.graphics.rectangle("fill", x-width,0,width*2,Height)
-		love.graphics.setColor(1,1,1)
+		if scene.player then
+			local t = self.timer/self.maxTimer
+			love.graphics.setColor(1,1,0.2, Lerp(0.9,0, t))
+			local x = scene.player.x - scene.camera.x
+			local width = Lerp(20,1, t)
+			width = width^2
+			love.graphics.rectangle("fill", x-width,0,width*2,Height)
+			love.graphics.setColor(1,1,1)
+		end
 	end
 
 	return self

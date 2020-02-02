@@ -195,6 +195,7 @@ function NewGameScene()
     scene.onPlayerDie = function(self, player)
         self.playerTimeOfDeath = self.time
         self.player = nil
+        ShakeScreen()
     end
 
     scene.spawnPlayer = function(self)

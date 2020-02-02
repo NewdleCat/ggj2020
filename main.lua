@@ -37,6 +37,8 @@ function love.load()
     DeathGear2 = NewAnimatedSprite("assets/deathGear2.png")
     DeathHead = NewAnimatedSprite("assets/deathHead.png")
 
+    ScreenShake = 0
+
     MikeSprite = NewAnimatedSprite("assets/mike.png")
     EyeDudeSprite = NewAnimatedSprite("assets/eyeDude.png")
     LaserSprite = NewAnimatedSprite("assets/laser.png")
@@ -147,11 +149,15 @@ function love.load()
   	love.graphics.setCanvas()
 end
 
+function ShakeScreen()
+	ScreenShake = 0.185
+end
+
 function love.update(dt)
+	ScreenShake = ScreenShake - dt
     Scene:update(dt)
     UpdateButtons()
 end
-
 
 function love.draw()
     love.graphics.setCanvas(Canvas)
@@ -159,7 +165,13 @@ function love.draw()
     Scene:draw()
     love.graphics.setCanvas()
     local scale = math.min(love.graphics.getWidth()/Width,love.graphics.getHeight()/Height)
-    love.graphics.draw(Canvas, love.graphics.getWidth()/2, love.graphics.getHeight()/2, 0, scale,scale, Width/2,Height/2)
+    local sx,sy = 0,0
+
+    if ScreenShake > 0 then
+    	sx = love.math.random()*Choose{1,-1}*scale*8
+    	sy = love.math.random()*Choose{1,-1}*scale*8
+    end
+    love.graphics.draw(Canvas, love.graphics.getWidth()/2 + sx, love.graphics.getHeight()/2 + sy, 0, scale,scale, Width/2,Height/2)
 end
 
 
@@ -301,7 +313,7 @@ function CopyTable(table)
 end
 
 function Choose(arr)
-    return arr[Floor(love.math.random()*(#arr))+1]
+    return arr[math.floor(love.math.random()*(#arr))+1]
 end
 function Rand(min,max, interval)
     local interval = interval or 1
