@@ -59,7 +59,7 @@ function love.load()
         end
 	}
 
-	Scene:loadMap("maps/joeymap.png")
+	Scene:loadMap("maps/joeymap2.png")
     Scene:spawnPlayer()
 	Canvas = love.graphics.newCanvas(Width, Height)
 
