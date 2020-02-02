@@ -240,6 +240,9 @@ function NewFoundHudObject(sprite)
             ShakeScreen()
             SfxThud2:play()
         end
+        if self.timer >= self.maxTimer then
+            Music:play()
+        end
         return self.timer < self.maxTimer, true
     end
 

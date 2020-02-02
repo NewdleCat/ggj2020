@@ -19,16 +19,20 @@ function love.load()
 	MaxCollectedCount = 0
 	Collectable = love.graphics.newImage("assets/collectable.png")
 
-    Music = love.audio.newSource( 'music/sleep mode.mp3', 'static' )
-    Music:setLooping(true) --the groove dont stop babey
-
+    MusicSleepMode = love.audio.newSource('music/sleep mode.mp3', 'static')
+    MusicSleepMode:setLooping(true)
     MusicBootup = love.audio.newSource('music/bootup.mp3', 'static')
     MusicBootup:setLooping(true)
     MusicDigital = love.audio.newSource('music/digital.mp3', 'static')
     MusicDigital:setLooping(true)
     MusicVibeTime = love.audio.newSource('music/initialize.mp3', 'static')
     MusicVibeTime:setLooping(true)
-    MusicVibeTime:play()
+    MusicPalindroid = love.audio.newSource('music/palindroid.mp3', 'static')
+    MusicPalindroid:setLooping(true)
+
+    Music = MusicVibeTime
+    Music:stop()
+    Music:play()
 
     SfxLaserFire = love.audio.newSource('sfx/laserfire.mp3', 'static')
 	SfxCheckpoint = love.audio.newSource('sfx/checkpoint.wav', 'static')
@@ -44,6 +48,7 @@ function love.load()
 
 	TitleSprite = love.graphics.newImage("assets/title.png")
 	WinSprite = love.graphics.newImage("assets/win.png")
+    SmokeSprite = love.graphics.newImage("assets/smoke.png")
 	IsTitleScreen = -1
 	TriedToMoveCamera = false
 
@@ -67,9 +72,10 @@ function love.load()
 
     ShipSprite = NewAnimatedSprite("assets/ship.png")
 
+
 	-- Tilemap
 	-- Use scene.tileSize to change the tilesize.
-	GameScene:setTileMap {
+    TileMap = {
 	    [0xFFFFFF] = NewTile { ------------------------------------- GROUND
             drawable = love.graphics.newImage("assets/tile1.png"),
             offset = 32
@@ -168,7 +174,9 @@ function love.load()
         end,
 	}
 
+	GameScene:setTileMap(TileMap)
 	GameScene:loadMap(MapFile)
+
 	Canvas = love.graphics.newCanvas(Width, Height)
 
 	local dw,dh = love.window.getDesktopDimensions()
