@@ -222,7 +222,7 @@ function NewGameScene()
         if self.win then
             love.graphics.setColor(1,1,1, Clamp01(self.time - self.winTime))
             love.graphics.draw(WinSprite)
-            love.graphics.setColor(1,1,1)
+            love.graphics.print("Smilies Collected: " .. CollectedCount .. " / " .. MaxCollectedCount, 32,32, 0, 4,4)
         end
     end
 
