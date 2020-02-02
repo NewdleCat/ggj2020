@@ -62,6 +62,22 @@ function love.load()
             local x, y = scene:tileCoordToCoord(i, j)
             scene:add(NewCheckpoint(scene, x, y))
         end,
+        [0x8949FF] = function (scene, i, j)
+            local x, y = scene:tileCoordToCoord(i, j)
+        	scene:add(NewTrigger{
+		        x = x,
+		        y = y,
+		        width = 64,
+		        height = 64,
+
+		        onTriggerEnter = function(self, scene, other)
+		            scene:transformPlayer(self.transformation)
+		            self.dead = true
+		        end,
+		        onTriggerExit = function(self, scene, other)
+		        end,
+        	})
+        end,
         [0x00FFFF] = NewSpawner(function(x, y)
             return {
                 x = x,
@@ -76,8 +92,7 @@ function love.load()
         end)
 	}
 
-	Scene:loadMap("maps/joeymap6.png")
-    Scene:spawnPlayer()
+	Scene:loadMap("maps/joeymap7.png")
 	Canvas = love.graphics.newCanvas(Width, Height)
 
 	local dw,dh = love.window.getDesktopDimensions()

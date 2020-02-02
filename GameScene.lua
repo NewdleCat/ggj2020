@@ -6,7 +6,7 @@ function NewGameScene()
     scene.skyColor = { 0, 1, 1 }
     scene.lastCheckpoint = nil
     scene.playerConstructor = NewHeadPlayer
-    scene.background = love.graphics.newImage("assets/bg2.png")
+    scene.background = love.graphics.newImage("assets/bg3.png")
     scene.backgroundTimer = 0
     scene.respawnWaitDuration = 1
     scene.playerTimeOfDeath = 0
@@ -57,6 +57,8 @@ function NewGameScene()
                 end
             end
         end
+        
+        Scene:spawnPlayer()
     end
 
     local sceneAdd = scene.add

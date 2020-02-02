@@ -60,6 +60,7 @@ function NewPlayer(x,y)
 	self.height = 32
 	self.width = 24
 	self.coyoteTime = 0
+	self.coyoteTimeMax = 0.15
     self.isPlayer = true
     self.health = 1
     self.xLastScreen = x
@@ -67,9 +68,11 @@ function NewPlayer(x,y)
     self.xNextScreen = x 
     self.yNextScreen = y
     self.hasArms = true
+    self.onWall = false
+    self.wallDirection = 0
 
 	self.update = function (self, scene, dt)
-		local maxWalkSpeed = 220
+		local maxWalkSpeed = 250
 		local walkSpeed = 60
 		local inAirSpeed = 10
 		local friction = 0.5
@@ -79,10 +82,19 @@ function NewPlayer(x,y)
 
 		-- adding graivty
 		if self.ySpeed > 0 then
-			self.ySpeed = self.ySpeed + dt*4000
+			if self.onWall then
+				self.ySpeed = math.min(self.ySpeed + dt*800, 80)
+			else
+				self.ySpeed = self.ySpeed + dt*4000
+			end
 		else
-			self.ySpeed = self.ySpeed + dt*1500
+			if self.onWall then
+				self.ySpeed = self.ySpeed + dt*3000
+			else
+				self.ySpeed = self.ySpeed + dt*1500
+			end
 		end
+		--print(self.ySpeed)
 
 		-- floor collision
 		local onGround = false
@@ -100,7 +112,7 @@ function NewPlayer(x,y)
 
 			self.ySpeed = 0
 			onGround = true
-			self.coyoteTime = 0.1
+			self.coyoteTime = self.coyoteTimeMax
 
             -- Call collision callback.
             if collision1 and collision1.onCollision then
@@ -114,6 +126,13 @@ function NewPlayer(x,y)
 		-- jumping
 		if self.coyoteTime > 0 and ButtonPress("jump") then
 			self.ySpeed = jumpSpeed
+			if self.onWall then
+				self.xSpeed = maxWalkSpeed*self.wallDirection*-1
+				self.onWall = false
+				print("walljump")
+			else
+				print("jump")
+			end
 		end
 
 		if not ButtonIsDown("jump") and self.ySpeed < 0 then
@@ -160,6 +179,9 @@ function NewPlayer(x,y)
 				end
 			end
 			walking = true
+			if self.onWall and self.wallDirection == -1 then
+				self.onWall = false
+			end
 		end
 		if ButtonIsDown("left") then
 			if self.xSpeed > -1*maxWalkSpeed then
@@ -171,6 +193,9 @@ function NewPlayer(x,y)
 				end
 			end
 			walking = true
+			if self.onWall and self.wallDirection == 1 then
+				self.onWall = false
+			end
 		end
 
 		-- wall collision
@@ -186,6 +211,11 @@ function NewPlayer(x,y)
 				self.x = self.x + GetSign(self.xSpeed)
 			end
 
+			if not self.onWall then
+				--self.onWall = true
+				self.wallDirection = GetSign(self.xSpeed)
+			end
+
 			self.xSpeed = 0
 
             -- Call collision callback.
@@ -197,9 +227,15 @@ function NewPlayer(x,y)
             end
 		end
 
+		if self.onWall then
+			self.coyoteTime = self.coyoteTimeMax
+		end
+
 		-- animate walking, friction when idling
 		if not walking then
-			self.xSpeed = self.xSpeed * friction*dt*60
+			if onGround then
+				self.xSpeed = self.xSpeed * friction*dt*60
+			end
 			if math.floor(self.animIndex) ~= 1 and math.floor(self.animIndex) ~= 4 then
 				self.animIndex = 1
 			end
@@ -432,11 +468,11 @@ function NewHeadPlayer(x,y)
 		end
 
 		-- animate walking, friction when idling
-		if not walking then
+		if not walking and onGround then
 			self.xSpeed = self.xSpeed * friction*dt*60
 		end
 
-		self:animate(walking, scene, dt)
+		self:animate(walking, onGround, scene, dt)
 		-- integrate x
 		self.x = self.x + self.xSpeed*dt
 
@@ -468,14 +504,18 @@ function NewHeadPlayer(x,y)
 
 	self.draw = function (self, scene)
 		love.graphics.setColor(1,1,1)
+		local direction = self.direction
+		if self.onWall then
+			direction = -1*self.wallDirection
+		end
 		love.graphics.draw(
             self.sprite.source,
             self.sprite[math.floor(self.animIndex)],
             self.x - scene.camera.x,self.y - scene.camera.y,
-            0, self.direction,1, 32,48)
+            0, direction,1, 32,48)
 	end
 
-	self.animate = function (self, walking, scene, dt)
+	self.animate = function (self, walking, onGround, scene, dt)
 		if not walking then
 			if math.floor(self.animIndex) ~= 1 and math.floor(self.animIndex) ~= 3 then
 				self.animIndex = 1
@@ -513,7 +553,19 @@ function NewOneLegPlayer(x,y)
 	self.maxWalkSpeed = 200
 	self.walkSpeed = 60
 
-	self.animate = function (self, walking, scene, dt)
+	self.animate = function (self, walking, onGround, scene, dt)
+		if onGround then
+			self.animIndex = self.animIndex + dt*2
+			if self.animIndex > 5 then
+				self.animIndex = 1
+			end
+		else
+			if self.ySpeed < 0 then
+				self.animIndex = 6
+			else
+				self.animIndex = 7
+			end
+		end
 	end
 
 	self.draw = function (self, scene)
@@ -522,7 +574,7 @@ function NewOneLegPlayer(x,y)
             self.sprite.source,
             self.sprite[math.floor(self.animIndex)],
             self.x - scene.camera.x,self.y - scene.camera.y,
-            0, self.direction,1, 32,32)
+            0, 1,1, 32,32)
 	end
 
 	return self
