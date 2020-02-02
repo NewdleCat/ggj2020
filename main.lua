@@ -26,6 +26,9 @@ function love.load()
 	Width = 64*24
 	Height = 64*14
 
+	IsTitleScreen = true
+	TriedToMoveCamera = false
+
 	Scene = NewGameScene()
 	love.graphics.setDefaultFilter("nearest")
 
@@ -102,10 +105,14 @@ function love.load()
 		        end,
         	})
         end,
-        [0x00FFFF] = NewSpawner(NewMike)
+        [0x00FFFF] = NewSpawner(NewMike),
+        [0x74AC54] = NewTile {
+        	drawable = NewAnimatedSprite("assets/ship.png"),
+        	isAnimated = true,
+        },
 	}
 
-	Scene:loadMap("maps/joeymap10.png")
+	Scene:loadMap("maps/intromap.png")
 	Canvas = love.graphics.newCanvas(Width, Height)
 
 	local dw,dh = love.window.getDesktopDimensions()

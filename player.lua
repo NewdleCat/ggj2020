@@ -9,14 +9,20 @@ local doCameraMove = function(self, scene)
     end
 
     if not scene.isCameraMoving then
+    	local moved = false
+    	local canMove = not IsTitleScreen and not TriedToMoveCamera
+
         if self.x + self.width - scene.camera.x > Width
                 and self.direction > 0 then
             self.xLastScreen = self.x
             self.yLastScreen = self.y
             self.xNextScreen = scene.camera.x + Width + 32
             self.yNextScreen = self.y
-            scene:moveCameraTo(scene.camera.x + Width, scene.camera.y)
-            scene.moveWithCameraFunction = moveWithCameraFunction
+            if canMove then
+	            scene:moveCameraTo(scene.camera.x + Width, scene.camera.y)
+	            scene.moveWithCameraFunction = moveWithCameraFunction
+	        end
+            moved = true
         end
         if self.x - scene.camera.x < 0
                 and self.direction < 0 then
@@ -24,8 +30,11 @@ local doCameraMove = function(self, scene)
             self.yLastScreen = self.y
             self.xNextScreen = scene.camera.x - 32
             self.yNextScreen = self.y
-            scene:moveCameraTo(scene.camera.x - Width, scene.camera.y)
-            scene.moveWithCameraFunction = moveWithCameraFunction
+            if canMove then
+	            scene:moveCameraTo(scene.camera.x - Width, scene.camera.y)
+	            scene.moveWithCameraFunction = moveWithCameraFunction
+	        end
+            moved = true
         end
         if self.y + self.height - scene.camera.y > Height
                 and self.ySpeed > 0 then
@@ -33,8 +42,11 @@ local doCameraMove = function(self, scene)
             self.yLastScreen = self.y
             self.xNextScreen = self.x 
             self.yNextScreen = scene.camera.y + Height + 32
-            scene:moveCameraTo(scene.camera.x, scene.camera.y + Height)
-            scene.moveWithCameraFunction = moveWithCameraFunction
+            if canMove then
+	            scene:moveCameraTo(scene.camera.x, scene.camera.y + Height)
+	            scene.moveWithCameraFunction = moveWithCameraFunction
+	        end
+            moved = true
         end
         if self.y - scene.camera.y < 0 
                 and self.ySpeed < 0 then
@@ -42,9 +54,21 @@ local doCameraMove = function(self, scene)
             self.yLastScreen = self.y
             self.xNextScreen = self.x 
             self.yNextScreen = scene.camera.y - 32
-            scene:moveCameraTo(scene.camera.x, scene.camera.y - Height)
-            scene.moveWithCameraFunction = moveWithCameraFunction
+            if canMove then
+	            scene:moveCameraTo(scene.camera.x, scene.camera.y - Height)
+	            scene.moveWithCameraFunction = moveWithCameraFunction
+	        end
+            moved = true
         end
+
+        if moved then
+        	TriedToMoveCamera = true
+        	if IsTitleScreen then
+	        	IsTitleScreen = false
+	        end
+	    else
+	    	TriedToMoveCamera = false
+	    end
     end
 end
 
@@ -207,7 +231,7 @@ function NewPlayer(x,y)
             self.x+self.width*GetSign(self.xSpeed) + self.xSpeed*dt,
             self.y - self.height+headspace)
 
-        if not scene:getCollisionAt(self.x+(self.width+1.5)*self.wallDirection, self.y -self.height+headspace) then
+        if not scene:getCollisionAt(self.x+(self.width*2)*self.wallDirection, self.y -self.height+headspace) then
         	self.onWall = false
         end
 		if collision1 or collision2 then

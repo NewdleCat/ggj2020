@@ -2,6 +2,7 @@
 function NewTile(attributes)
     local tile = {}
     tile.drawable = attributes.drawable
+    tile.isAnimated = attributes.isAnimated
 
     tile.offset = attributes.offset
 
@@ -23,7 +24,11 @@ function NewTile(attributes)
             y = y - self.offset
         end
 
-        love.graphics.draw(self.drawable, x, y, 0)
+        if not self.isAnimated then
+	        love.graphics.draw(self.drawable, x, y, 0)
+	    else
+	        love.graphics.draw(self.drawable.source, self.drawable[1], x, y, 0)
+	    end
     end
     
     return tile
