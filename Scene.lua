@@ -113,6 +113,25 @@ function NewScene()
             self.camera.x = x
             self.camera.y = y
         end
+
+        -- Go through the spawners in the range and call spawn on them.
+        local startI, startJ = scene:coordToTileIndex(
+            self.camera.x,
+            self.camera.y)
+        local endI, endJ = scene:coordToTileIndex(
+            self.camera.x + Width,
+            self.camera.y + Height)
+        
+        if self.getTile then
+            for i = startI, endI do
+                for j = startJ, endJ do
+                    local tile = self:getTile(i, j)
+                    if tile and tile.isSpawner then
+                        tile:spawn(self, i, j)
+                    end
+                end
+            end
+        end
     end
 
     return scene

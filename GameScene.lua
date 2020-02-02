@@ -152,8 +152,9 @@ function NewGameScene()
         for i = minI, maxI do
             local row = self.mapTable[i]
             for j = minJ, maxJ do
-                if row[j] then
-                    row[j]:drawTile(self, i, j)
+                local e = row[j]
+                if e and e.drawTile then
+                    e:drawTile(self, i, j)
                 end
             end
         end
