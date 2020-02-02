@@ -161,6 +161,7 @@ function NewPlayer(x,y)
 			end
 
 			IsTitleScreen = math.max(0, IsTitleScreen)
+			self.coyoteTime = 0
 		end
 
 		if not ButtonIsDown("jump") and self.ySpeed < 0 then
