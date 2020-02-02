@@ -12,8 +12,8 @@ function love.load()
     music:setLooping( true ) --the groove dont stop babey
     music:play()
 
-	Width = 64*20
-	Height = Width * 0.5
+	Width = 64*24
+	Height = 64*14
 
 	Scene = NewGameScene()
 	love.graphics.setDefaultFilter("nearest")
@@ -51,12 +51,12 @@ function love.load()
         end
 	}
 
-	Scene:loadMap("maps/bigmap.png")
+	Scene:loadMap("maps/introtest1.png")
     Scene:spawnPlayer()
 	Canvas = love.graphics.newCanvas(Width, Height)
 
 	local dw,dh = love.window.getDesktopDimensions()
-	love.window.setMode(math.min(Width, dw), math.min(Height, dh), {resizable = true})
+	love.window.setMode(math.min(Width, dw), math.min(Height, dh), {resizable = true, highdpi = true})
 
     local joysticks = love.joystick.getJoysticks()
     Gamepad = nil
