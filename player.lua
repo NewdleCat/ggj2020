@@ -500,6 +500,9 @@ function NewHeadPlayer(x,y)
 end
 
 function NewOneLegPlayer(x,y)
+	music:stop()
+	music = love.audio.newSource( 'music/bootup.mp3', 'static' )
+	music:play()
 	local self = NewHeadPlayer(x,y)
 	self.sprite = NewAnimatedSprite("assets/robotwalkOneLeg.png")
 	self.hopHeight = -450
@@ -526,6 +529,9 @@ function NewOneLegPlayer(x,y)
 end
 
 function NewArmlessPlayer(x,y)
+	music:stop()
+	music = love.audio.newSource( 'music/digital.mp3', 'static' )
+	music:play()
 	local self = NewPlayer(x,y)
 	self.hasArms = false
 	self.sprite = NewAnimatedSprite("assets/robotArmless.png")
