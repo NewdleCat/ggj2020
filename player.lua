@@ -97,6 +97,7 @@ function NewPlayer(x,y)
     self.hasArms = true
     self.onWall = false
     self.wallDirection = 0
+    self.shouldDestroy = false
 
 	self.update = function (self, scene, dt)
 		local maxWalkSpeed = 250
@@ -337,6 +338,9 @@ function NewPlayer(x,y)
         if self.health <= 0 then
             scene:add(NewRobotCorpse(self))
             scene:onPlayerDie(self)
+            return false
+        end
+        if self.shouldDestroy then
             return false
         end
 		return true
