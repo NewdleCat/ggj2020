@@ -6,8 +6,10 @@ function NewGameScene()
     scene.skyColor = { 0, 1, 1 }
     scene.lastCheckpoint = nil
     scene.playerConstructor = NewHeadPlayer
-    scene.background = love.graphics.newImage("assets/bg2.png")
+    scene.background = love.graphics.newImage("assets/bg3.png")
     scene.backgroundTimer = 0
+    scene.respawnWaitDuration = 1
+    scene.playerTimeOfDeath = 0
 
     -- Tilemap should be a table with rgb color hex values as keys and either a
     -- function or table as a value. For example:
@@ -55,6 +57,8 @@ function NewGameScene()
                 end
             end
         end
+        
+        Scene:spawnPlayer()
     end
 
     local sceneAdd = scene.add
@@ -124,6 +128,12 @@ function NewGameScene()
     scene.update = function(self, dt)
         self:parentUpdate(dt)
         self.backgroundTimer = self.backgroundTimer + dt
+
+        if self.player == nil
+                and self.time - self.playerTimeOfDeath
+                    >= self.respawnWaitDuration then
+            self:spawnPlayer()
+        end
     end
 
     local sceneDraw = scene.draw
@@ -161,7 +171,8 @@ function NewGameScene()
     end
 
     scene.onPlayerDie = function(self, player)
-        self:spawnPlayer()
+        self.playerTimeOfDeath = self.time
+        self.player = nil
     end
 
     scene.spawnPlayer = function(self)

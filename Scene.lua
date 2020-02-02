@@ -42,8 +42,10 @@ function NewScene()
         local i=1
 
         -- Tell the triggers whether the player is inside or not.
-        for j, trigger in ipairs(self.triggers) do
-            trigger.containsPlayer = trigger:overlaps(self.player)
+        if self.player then
+            for j, trigger in ipairs(self.triggers) do
+                trigger.containsPlayer = trigger:overlaps(self.player)
+            end
         end
 
         if not self.isCameraMoving then
