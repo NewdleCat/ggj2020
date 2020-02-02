@@ -12,7 +12,7 @@ require "Spawner"
 require "fallingstate"
 
 function love.load()
-	MapFile = "maps/joeymap12.png"
+	MapFile = "maps/joeymap100.png"
 	CameraStartingPixelX = 1
 	CameraStartingPixelY = 2
 
