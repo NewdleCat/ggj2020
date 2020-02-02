@@ -158,6 +158,20 @@ function NewGameScene()
                 end
             end
         end
+
+        if self.win then
+            -- Restart
+            if ButtonWasDown("jump") then
+                GameScene = NewGameScene()
+                ChangeScene(GameScene)
+                GameScene:setTileMap(TileMap)
+                GameScene:loadMap(MapFile)
+                Music:stop()
+                Music = MusicSleepMode
+                Music:stop()
+                Music:play()
+            end
+        end
     end
 
     local sceneDraw = scene.draw

@@ -12,6 +12,10 @@ function NewShip(x, y)
             self.playerInShip = true
             scene.win = true
             scene.winTime = scene.time
+            Music:stop()
+            Music = MusicPalindroid
+            Music:stop()
+            Music:play()
         end
     }
 
