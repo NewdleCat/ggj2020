@@ -135,13 +135,17 @@ function NewGameScene()
         self:parentUpdate(dt)
         self.backgroundTimer = self.backgroundTimer + dt
 
+        if IsTitleScreen >= 0 then
+            IsTitleScreen = math.min(IsTitleScreen + dt, 1)
+        end
+
         if self.player == nil
                 and self.time - self.playerTimeOfDeath
                     >= self.respawnWaitDuration then
             self:spawnPlayer()
         end
 
-        if not self.isCameraMoving then
+        if not self.isCameraMoving and not self.paused then
             local i = 1
             while i <= #self.frontObjects do
                 local object = self.frontObjects[i]
@@ -190,6 +194,14 @@ function NewGameScene()
         for i=1, #self.frontObjects do
             self.frontObjects[i]:draw(scene)
         end
+
+        if #self.hudObjects > 0 then
+            self.hudObjects[1]:draw(self)
+        end
+
+        love.graphics.setColor(1,1,1, 1-IsTitleScreen)
+        love.graphics.draw(TitleSprite)
+        love.graphics.setColor(1,1,1)
     end
 
     scene.onPlayerDie = function(self, player)
@@ -210,8 +222,8 @@ function NewGameScene()
     scene.transformPlayer = function (self, newplayer)
         self.playerConstructor = newplayer
         self.player.dead = true
-        --self.player = self:add(self.playerConstructor(math.floor(self.player.x/self.tileSize)*self.tileSize +self.tileSize/2,math.floor(self.player.y/self.tileSize)*self.tileSize + self.tileSize/2))
-        self.player = self:add(self.playerConstructor(self.player.x,self.player.y))
+        self.player = self:add(self.playerConstructor(math.floor(self.player.x/self.tileSize)*self.tileSize +self.tileSize/2,math.floor(self.player.y/self.tileSize)*self.tileSize + self.tileSize/2))
+        --self.player = self:add(self.playerConstructor(self.player.x,self.player.y))
     end
 
     return scene

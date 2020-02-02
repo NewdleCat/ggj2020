@@ -13,13 +13,20 @@ function NewScene()
     scene.defaultCamMoveDuration = 0.4
     scene.isCameraMoving = false
     scene.moveWithCameraFunction = nil
-    
+    scene.hudObjects = {}
+    scene.paused = false
+
     -- Use this function, don't add by using objects.
     scene.add = function(self, object)
         self.objects[#self.objects + 1] = object
         if object.isTrigger == true then
             self.triggers[#self.triggers + 1] = object
         end
+        return object
+    end
+
+    scene.hudAdd = function (self, object)
+        self.hudObjects[#self.hudObjects + 1] = object
         return object
     end
 
@@ -38,7 +45,16 @@ function NewScene()
             end
         end
 
-        if not self.isCameraMoving then
+        local keep = false
+        self.paused = false
+        if #self.hudObjects > 0 then
+            keep, self.paused = self.hudObjects[1]:update(self, dt)
+            if not keep then
+                table.remove(self.hudObjects, 1)
+            end
+        end
+
+        if not self.isCameraMoving and not self.paused then
             local i=1
 
             while i <= #self.objects do
@@ -60,7 +76,7 @@ function NewScene()
             end
         end
 
-    -- Move the camera
+        -- Move the camera
         local t = (self.time - self.startCamMoveTime)
             / (self.endCamMoveTime - self.startCamMoveTime)
         self.isCameraMoving = t >= 0 and t <= 1
@@ -155,3 +171,52 @@ function NewScene()
     return scene
 end
 
+function NewFadeToBlackHudObject(pause, sceneChange)
+    local self = {}
+    self.timer = 0
+    self.pause = pause
+    self.sceneChange = sceneChange
+
+    self.update = function (self, scene, dt)
+        self.timer = self.timer + dt
+
+        if self.timer >= 1 and self.sceneChange then
+            ChangeScene(self.sceneChange)
+        end
+
+        return self.timer < 1, self.pause
+    end
+
+    self.draw = function (self, scene)
+        love.graphics.setColor(0,0,0,self.timer)
+        love.graphics.rectangle("fill", 0,0, Width,Height)
+        love.graphics.setColor(1,1,1)
+    end
+
+    return self
+end
+
+function NewFadeFromBlackHudObject(pause, sceneChange)
+    local self = {}
+    self.timer = 0
+    self.pause = pause
+    self.sceneChange = sceneChange
+
+    self.update = function (self, scene, dt)
+        self.timer = self.timer + dt/4
+
+        if self.timer >= 1 and self.sceneChange then
+            ChangeScene(self.sceneChange)
+        end
+
+        return self.timer < 1, self.pause
+    end
+
+    self.draw = function (self, scene)
+        love.graphics.setColor(0,0,0,1-self.timer)
+        love.graphics.rectangle("fill", 0,0, Width,Height)
+        love.graphics.setColor(1,1,1)
+    end
+
+    return self
+end

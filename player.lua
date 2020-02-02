@@ -10,7 +10,8 @@ local doCameraMove = function(self, scene)
 
     if not scene.isCameraMoving then
     	local moved = false
-    	local canMove = not IsTitleScreen and not TriedToMoveCamera
+    	local isStart = scene.camera.x/Width == CameraStartingPixelX and scene.camera.y/Height == CameraStartingPixelY
+    	local canMove = not isStart
 
         if self.x + self.width - scene.camera.x > Width
                 and self.direction > 0 then
@@ -62,12 +63,14 @@ local doCameraMove = function(self, scene)
         end
 
         if moved then
-        	TriedToMoveCamera = true
-        	if IsTitleScreen then
-	        	IsTitleScreen = false
-	        end
-	    else
-	    	TriedToMoveCamera = false
+        	if isStart then
+        		--self.y = scene.camera.y + Height*2 + 16
+        		--self.ySpeed = 1
+        		self.dead = true
+
+        		scene:hudAdd(NewFadeToBlackHudObject(true, NewFallingScene()))
+        		scene:hudAdd(NewFadeFromBlackHudObject(false))
+        	end
 	    end
     end
 end
@@ -154,10 +157,9 @@ function NewPlayer(x,y)
 				self.xSpeed = maxWalkSpeed*self.wallDirection*-1
 				self.onWall = false
 				self.direction = self.wallDirection*-1
-				print("walljump")
-			else
-				print("jump")
 			end
+
+			IsTitleScreen = math.max(0, IsTitleScreen)
 		end
 
 		if not ButtonIsDown("jump") and self.ySpeed < 0 then
@@ -284,6 +286,8 @@ function NewPlayer(x,y)
 			if math.floor(self.animIndex) > 3 then
 				self.animIndex = 2
 			end
+
+			IsTitleScreen = math.max(0, IsTitleScreen)
 		end
 
 		if not onGround then

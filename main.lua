@@ -8,8 +8,13 @@ require "Tiles"
 require "Trigger"
 require "Checkpoint"
 require "Spawner"
+require "fallingstate"
 
 function love.load()
+	MapFile = "maps/joeymap11.png"
+	CameraStartingPixelX = 1
+	CameraStartingPixelY = 2
+
     Music = love.audio.newSource( 'music/sleep mode.mp3', 'static' )
     Music:setLooping(true) --the groove dont stop babey
     Music:play()
@@ -26,10 +31,12 @@ function love.load()
 	Width = 64*24
 	Height = 64*14
 
-	IsTitleScreen = true
+	TitleSprite = love.graphics.newImage("assets/title.png")
+	IsTitleScreen = -1
 	TriedToMoveCamera = false
 
-	Scene = NewGameScene()
+	GameScene = NewGameScene()
+	ChangeScene(GameScene)
 	love.graphics.setDefaultFilter("nearest")
 
     DeathArmLeft = NewAnimatedSprite("assets/deathArmLeft.png")
@@ -48,7 +55,7 @@ function love.load()
 
 	-- Tilemap
 	-- Use scene.tileSize to change the tilesize.
-	Scene:setTileMap {
+	GameScene:setTileMap {
 	    [0xFFFFFF] = NewTile { ------------------------------------- GROUND
             drawable = love.graphics.newImage("assets/tile1.png"),
             offset = 32
@@ -114,7 +121,7 @@ function love.load()
         [0x00AAFF] = NewSpawner(NewEyeDude),
 	}
 
-	Scene:loadMap("maps/intromap.png")
+	GameScene:loadMap(MapFile)
 	Canvas = love.graphics.newCanvas(Width, Height)
 
 	local dw,dh = love.window.getDesktopDimensions()
@@ -146,13 +153,18 @@ function love.load()
 
 		vec4 effect(vec4 color, Image tex, vec2 texture_coords, vec2 screen_coords)
 		{
-		    return vec4(lerp(92.0, 51.0, texture_coords.y),lerp(38.0, 0.0, texture_coords.y),lerp(212.0, 103.0, texture_coords.y),1);
+		    return vec4(lerp(0.0, 0.0, texture_coords.y),lerp(30.0, 0.0, texture_coords.y),lerp(140.0, 90.0, texture_coords.y),1);
+		    //return vec4(lerp(92.0, 51.0, texture_coords.y),lerp(38.0, 0.0, texture_coords.y),lerp(212.0, 103.0, texture_coords.y),1);
 		}
   	]]
   	FullCanvas = love.graphics.newCanvas(Width,Height)
   	love.graphics.setCanvas(FullCanvas)
   	love.graphics.clear(1,1,1,1)
   	love.graphics.setCanvas()
+end
+
+function ChangeScene(state)
+	Scene = state
 end
 
 function ShakeScreen()
@@ -363,4 +375,17 @@ function Contains(table, value)
     return false
 end
 
-
+function HSV(h, s, v)
+    if s <= 0 then return v,v,v end
+    h, s, v = h/256*6, s/255, v/255
+    local c = v*s
+    local x = (1-math.abs((h%2)-1))*c
+    local m,r,g,b = (v-c), 0,0,0
+    if h < 1     then r,g,b = c,x,0
+    elseif h < 2 then r,g,b = x,c,0
+    elseif h < 3 then r,g,b = 0,c,x
+    elseif h < 4 then r,g,b = 0,x,c
+    elseif h < 5 then r,g,b = x,0,c
+    else              r,g,b = c,0,x
+    end return (r+m),(g+m),(b+m)
+end
