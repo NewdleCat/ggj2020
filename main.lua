@@ -42,6 +42,8 @@ function love.load()
 	SfxRespawn = love.audio.newSource('sfx/Respawn.wav', 'static')
 	SfxThud1 = love.audio.newSource('sfx/thud1.wav', 'static')
 	SfxThud2 = love.audio.newSource('sfx/thud2.wav', 'static')
+	SfxCollectable = love.audio.newSource("sfx/collectible.wav", "static")
+	SfxHeadbump = love.audio.newSource("sfx/headBump.wav", "static")
 
 	Width = 64*24
 	Height = 64*14
@@ -155,6 +157,7 @@ function love.load()
 		        onTriggerEnter = function(self, scene, other)
 		        	CollectedCount = CollectedCount + 1
 		            self.dead = true
+		            SfxCollectable:play()
 		        end,
 		        onTriggerExit = function(self, scene, other)
 		        end,

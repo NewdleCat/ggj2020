@@ -184,6 +184,7 @@ function NewPlayer(x,y)
 			end
 
 			self.ySpeed = 0
+            SfxHeadbump:play()
 
             -- Call collision callback.
             if collision1 and collision1.onCollision then
@@ -449,6 +450,7 @@ function NewHeadPlayer(x,y)
 			end
 
 			self.ySpeed = 0
+            SfxHeadbump:play()
 
             -- Call collision callback.
             if collision1 and collision1.onCollision then
