@@ -38,6 +38,7 @@ function love.load()
     DeathHead = NewAnimatedSprite("assets/deathHead.png")
 
     MikeSprite = NewAnimatedSprite("assets/mike.png")
+    EyeDudeSprite = NewAnimatedSprite("assets/eyeDude.png")
     LaserSprite = NewAnimatedSprite("assets/laser.png")
 
 	-- Tilemap
@@ -100,10 +101,12 @@ function love.load()
 		        end,
         	})
         end,
-        [0x00FFFF] = NewSpawner(NewMike)
+        [0x00FFFF] = NewSpawner(NewMike),
+        [0x00AAFF] = NewSpawner(NewEyeDude)
 	}
 
-	Scene:loadMap("maps/joeymap10.png")
+	--Scene:loadMap("maps/joeymap10.png")
+	Scene:loadMap("maps/testMap.png")
 	Canvas = love.graphics.newCanvas(Width, Height)
 
 	local dw,dh = love.window.getDesktopDimensions()
