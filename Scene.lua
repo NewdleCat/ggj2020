@@ -105,12 +105,17 @@ function NewScene()
     end
 
     scene.isVisible = function(self, obj)
-        if obj.x - self.camera.x < -obj.width 
-                or obj.x - self.camera.x > Width + obj.width then
+        local minX = math.min(self.camera.x, self.endCamMovePos.x)
+        local maxX = math.max(self.camera.x, self.endCamMovePos.x)
+        local minY = math.min(self.camera.y, self.endCamMovePos.y)
+        local maxY = math.max(self.camera.y, self.endCamMovePos.y)
+
+        if obj.x - minX < -obj.width 
+                or obj.x - maxX > Width + obj.width then
             return false
         end
-        if obj.y - self.camera.y < -obj.height 
-                or obj.y - self.camera.y > Height + obj.height then
+        if obj.y - minY < -obj.height 
+                or obj.y - maxY > Height + obj.height then
             return false
         end
         return true
@@ -121,7 +126,7 @@ function NewScene()
             duration = self.defaultCamMoveDuration
         end
         local useSpawners = not self.endCamMovePos or x ~= self.endCamMovePos.x
-            and y ~= self.endCamMovePos.y
+            or y ~= self.endCamMovePos.y
 
         if not self.startCamMovePos then
             self.startCamMovePos = {} end
@@ -148,11 +153,11 @@ function NewScene()
 
         -- Go through the spawners in the range and call spawn on them.
         local startI, startJ = scene:coordToTileIndex(
-            self.camera.x,
-            self.camera.y)
+            self.endCamMovePos.x,
+            self.endCamMovePos.y)
         local endI, endJ = scene:coordToTileIndex(
-            self.camera.x + Width,
-            self.camera.y + Height)
+            self.endCamMovePos.x + Width,
+            self.endCamMovePos.y + Height)
         
         if useSpawners then
             if self.getTile then
