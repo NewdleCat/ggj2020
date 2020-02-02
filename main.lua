@@ -18,9 +18,13 @@ function love.load()
 	Scene = NewGameScene()
 	love.graphics.setDefaultFilter("nearest")
 
-    SpriteRobotLeg = NewAnimatedSprite("assets/robotLeg.png")
-    SpriteRobotArms = NewAnimatedSprite("assets/robotArms.png")
-    SpriteRobotHead = NewAnimatedSprite("assets/robothead.png")
+    deathArmLeft = NewAnimatedSprite("assets/deathArmLeft.png")
+    deathArmRight = NewAnimatedSprite("assets/deathArmRight.png")
+    deathFootLeft = NewAnimatedSprite("assets/deathFootLeft.png")
+    deathFootRight = NewAnimatedSprite("assets/deathFootRight.png")
+    deathGear1 = NewAnimatedSprite("assets/deathGear1.png")
+    deathGear2 = NewAnimatedSprite("assets/deathGear2.png")
+    deathHead = NewAnimatedSprite("assets/deathHead.png")
 
 	-- Tilemap
 	-- Use scene.tileSize to change the tilesize.
