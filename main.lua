@@ -181,6 +181,8 @@ function love.load()
 
 	local dw,dh = love.window.getDesktopDimensions()
 	love.window.setMode(math.min(Width, dw), math.min(Height, dh), {resizable = true, highdpi = true})
+	love.window.setTitle("Out on a Limb")
+	love.mouse.setVisible(false)
 
     local joysticks = love.joystick.getJoysticks()
     Gamepad = nil
