@@ -5,7 +5,7 @@ function NewGameScene()
     scene.tileSize = 64
     scene.skyColor = { 0, 1, 1 }
     scene.lastCheckpoint = nil
-    scene.playerConstructor = NewPlayer
+    scene.playerConstructor = NewHeadPlayer
     scene.background = love.graphics.newImage("assets/bg3.png")
     scene.backgroundTimer = 0
 
