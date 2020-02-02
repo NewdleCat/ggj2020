@@ -20,6 +20,7 @@ function NewScene()
     scene.time = 0
     scene.defaultCamMoveDuration = 0.5
     scene.isCameraMoving = false
+    scene.moveWithCameraFunction = nil
     
     -- Use this function, don't add by using objects.
     scene.add = function(self, object)
@@ -65,20 +66,21 @@ function NewScene()
             end
         end
 
-        -- Move the camera
-        do
-            local t = (self.time - self.startCamMoveTime)
-                / (self.endCamMoveTime - self.startCamMoveTime)
-            self.isCameraMoving = t >= 0 and t <= 1
-            self.camera.x = Slerp(
-                self.startCamMovePos.x,
-                self.endCamMovePos.x,
-                Clamp01(t))
-            self.camera.y = Slerp(
-                self.startCamMovePos.y,
-                self.endCamMovePos.y,
-                Clamp01(t))
+    -- Move the camera
+        local t = (self.time - self.startCamMoveTime)
+            / (self.endCamMoveTime - self.startCamMoveTime)
+        self.isCameraMoving = t >= 0 and t <= 1
+        if self.moveWithCameraFunction and self.isCameraMoving then
+            self.moveWithCameraFunction(self, t)
         end
+        self.camera.x = Slerp(
+            self.startCamMovePos.x,
+            self.endCamMovePos.x,
+            Clamp01(t))
+        self.camera.y = Slerp(
+            self.startCamMovePos.y,
+            self.endCamMovePos.y,
+            Clamp01(t))
         self.time = self.time + dt
     end
 
