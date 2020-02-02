@@ -1,3 +1,4 @@
+require "Ship"
 require "Enemies"
 require "RobotCorpse"
 require "Scene"
@@ -27,11 +28,17 @@ function love.load()
     MusicVibeTime:setLooping(true)
 
     SfxLaserFire = love.audio.newSource('sfx/laserfire.mp3', 'static')
+	SfxCheckpoint = love.audio.newSource('sfx/checkpoint.wav', 'static')
+	SfxDeath = love.audio.newSource('sfx/death.wav', 'static')
+	SfxJump = love.audio.newSource('sfx/Jump.wav', 'static')
+	SfxPickup = love.audio.newSource('sfx/pickup.wav', 'static')
+	SfxRespawn = love.audio.newSource('sfx/Respawn.wav', 'static')
 
 	Width = 64*24
 	Height = 64*14
 
 	TitleSprite = love.graphics.newImage("assets/title.png")
+	WinSprite = love.graphics.newImage("assets/win.png")
 	IsTitleScreen = -1
 	TriedToMoveCamera = false
 
@@ -52,6 +59,8 @@ function love.load()
     MikeSprite = NewAnimatedSprite("assets/mike.png")
     EyeDudeSprite = NewAnimatedSprite("assets/eyeDude.png")
     LaserSprite = NewAnimatedSprite("assets/laser.png")
+
+    ShipSprite = NewAnimatedSprite("assets/ship.png")
 
 	-- Tilemap
 	-- Use scene.tileSize to change the tilesize.
@@ -76,21 +85,24 @@ function love.load()
             scene:add(NewBodyTrigger(x,y,
                 NewAnimatedSprite("assets/bodypickup1.png"),
                 NewOneLegPlayer,
-                MusicBootup))
+                MusicBootup,
+                love.graphics.newImage("assets/bodyfind1.png")))
         end,
         [0x00EB00] = function (scene, i, j) ------------------------ ROBOT LEG 2
             local x, y = scene:tileCoordToCoord(i, j)
             scene:add(NewBodyTrigger(x,y,
                 NewAnimatedSprite("assets/bodypickup2.png"),
                 NewArmlessPlayer,
-                MusicDigital))
+                MusicDigital,
+                love.graphics.newImage("assets/bodyfind2.png")))
         end,
         [0x00D700] = function (scene, i, j) ------------------------ ROBOT NORMAL
             local x, y = scene:tileCoordToCoord(i, j)
             scene:add(NewBodyTrigger(x,y,
                 NewAnimatedSprite("assets/bodypickup3.png"),
                 NewPlayer,
-                MusicVibeTime))
+                MusicVibeTime,
+                love.graphics.newImage("assets/bodyfind3.png")))
         end,
         [0xFF0000] = SpikeTile, ------------------------------------ SPIKES,
         [0XFFFF00] = function (scene, i, j) ------------------------ CHECKPOINT
@@ -113,12 +125,12 @@ function love.load()
 		        end,
         	})
         end,
-        [0x00FFFF] = NewSpawner(NewMike),
-        [0x74AC54] = NewTile {
-        	drawable = NewAnimatedSprite("assets/ship.png"),
-        	isAnimated = true,
-        },
-        [0x00AAFF] = NewSpawner(NewEyeDude),
+        [0x00FFFF] = NewSpawner(NewMike), -------------------------- MIKE
+        [0x74AC54] = function(scene, i, j) ------------------------- SHIP
+            local x, y = scene:tileCoordToCoord(i, j)
+            scene:add(NewShip(x, y))
+        end,
+        [0x00AAFF] = NewSpawner(NewEyeDude), ----------------------- EYE DUDE
 	}
 
 	GameScene:loadMap(MapFile)
@@ -135,8 +147,8 @@ function love.load()
     JoystickSensitivity = 0.25
 
     ButtonsDown = {
-        ["right"] = false, 
-        ["left"] = false, 
+        ["right"] = false,
+        ["left"] = false,
         ["up"] = false,
         ["down"] = false,
         ["a"] = false,
@@ -199,7 +211,7 @@ end
 
 
 function GamepadExists()
-    return Gamepad ~= nil 
+    return Gamepad ~= nil
 end
 
 function ButtonPress(btn)
@@ -358,7 +370,7 @@ function Lerp(a,b,t) return (1-t)*a + t*b end
 function Slerp(a, b, t)
     return a + (0.5 - math.cos(t * math.pi) * 0.5) * (b - a)
 end
-function DeltaLerp(a,b,t, dt) 
+function DeltaLerp(a,b,t, dt)
     return Lerp(a,b, 1 - t^(dt))
 end
 function Clamp(a, b, t)

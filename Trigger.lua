@@ -43,7 +43,7 @@ function NewTrigger(attributes)
     return trigger
 end
 
-function NewBodyTrigger(x,y, sprite, transformation, song)
+function NewBodyTrigger(x,y, sprite, transformation, song, foundSprite)
     local self = NewTrigger {
         x = x,
         y = y,
@@ -54,8 +54,10 @@ function NewBodyTrigger(x,y, sprite, transformation, song)
         animIndex = 1,
         timer = 0,
         song = song,
+        foundSprite = foundSprite,
 
         onTriggerEnter = function(self, scene, other)
+            SfxPickup:play()
             scene:transformPlayer(self.transformation)
             self.dead = true
             if Music ~= self.song then
@@ -64,6 +66,8 @@ function NewBodyTrigger(x,y, sprite, transformation, song)
                 Music:stop()
                 Music:play()
             end
+
+            scene:hudAdd(NewFoundHudObject(self.foundSprite))
         end,
         onTriggerExit = function(self, scene, other)
         end,
