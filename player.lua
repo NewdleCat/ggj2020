@@ -465,7 +465,7 @@ end
 
 function NewOneLegPlayer(x,y)
 	local self = NewHeadPlayer(x,y)
-	self.sprite = NewAnimatedSprite("assets/robotOneLeg.png")
+	self.sprite = NewAnimatedSprite("assets/robotwalkOneLeg.png")
 	self.hopHeight = -550
 	self.upGrav = 2000
 	self.downGrav = 4000

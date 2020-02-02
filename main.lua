@@ -75,6 +75,22 @@ function love.load()
         ["start"] = false,
         ["jump"] = false,
     }
+
+    BackgroundGradientShader = love.graphics.newShader[[
+    	number lerp(number a, number b, number t)
+    	{
+    		return (1.0-t)*a/255.0 + t*b/255.0;
+    	}
+
+		vec4 effect(vec4 color, Image tex, vec2 texture_coords, vec2 screen_coords)
+		{
+		    return vec4(lerp(92.0, 51.0, texture_coords.y),lerp(38.0, 0.0, texture_coords.y),lerp(212.0, 103.0, texture_coords.y),1);
+		}
+  	]]
+  	FullCanvas = love.graphics.newCanvas(Width,Height)
+  	love.graphics.setCanvas(FullCanvas)
+  	love.graphics.clear(1,1,1,1)
+  	love.graphics.setCanvas()
 end
 
 function love.update(dt)
@@ -85,6 +101,7 @@ end
 
 function love.draw()
     love.graphics.setCanvas(Canvas)
+    love.graphics.clear(0,0,0,0)
     Scene:draw()
     love.graphics.setCanvas()
     local scale = math.min(love.graphics.getWidth()/Width,love.graphics.getHeight()/Height)
