@@ -31,8 +31,6 @@ function NewScene()
     end
 
     scene.update = function(self, dt)
-        local i=1
-
         -- Tell the triggers whether the player is inside or not.
         if self.player then
             for j, trigger in ipairs(self.triggers) do
@@ -41,6 +39,8 @@ function NewScene()
         end
 
         if not self.isCameraMoving then
+            local i=1
+
             while i <= #self.objects do
                 local object = self.objects[i]
                 if (not object.update or object:update(self, dt)) and not object.dead then

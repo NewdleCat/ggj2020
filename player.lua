@@ -592,3 +592,26 @@ function NewArmlessPlayer(x,y)
 
 	return self
 end
+
+function NewPlayerSpawnAnimation(x,y)
+	local self = {}
+	self.timer = 0
+	self.maxTimer = 0.7
+
+	self.update = function (self, scene, dt)
+		self.timer = self.timer + dt
+		return self.timer < self.maxTimer
+	end
+
+	self.draw = function (self, scene)
+		local t = self.timer/self.maxTimer
+		love.graphics.setColor(1,1,0.2, Lerp(0.9,0, t))
+		local x = scene.player.x - scene.camera.x
+		local width = Lerp(20,1, t)
+		width = width^2
+		love.graphics.rectangle("fill", x-width,0,width*2,Height)
+		love.graphics.setColor(1,1,1)
+	end
+
+	return self
+end

@@ -103,7 +103,7 @@ function love.load()
         [0x00FFFF] = NewSpawner(NewMike)
 	}
 
-	Scene:loadMap("maps/testMap.png")
+	Scene:loadMap("maps/joeymap10.png")
 	Canvas = love.graphics.newCanvas(Width, Height)
 
 	local dw,dh = love.window.getDesktopDimensions()
