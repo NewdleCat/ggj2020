@@ -2,8 +2,10 @@
 local doCameraMove = function(self, scene)
     -- Move the camera to the new area if necessary.
     local moveWithCameraFunction = function (scene, timer)
-    	scene.player.x = Lerp(scene.player.xLastScreen, scene.player.xNextScreen, timer)
-    	scene.player.y = Lerp(scene.player.yLastScreen, scene.player.yNextScreen, timer)
+    	if scene.player then
+	    	scene.player.x = Lerp(scene.player.xLastScreen, scene.player.xNextScreen, timer)
+	    	scene.player.y = Lerp(scene.player.yLastScreen, scene.player.yNextScreen, timer)
+	    end
     end
 
     if not scene.isCameraMoving then
@@ -292,6 +294,10 @@ function NewHeadPlayer(x,y)
 	self.inAirSpeed = 15
     self.isPlayer = true
     self.health = 1
+    self.xLastScreen = x
+    self.yLastScreen = y
+    self.xNextScreen = x 
+    self.yNextScreen = y
 
 	self.update = function (self, scene, dt)
 		local maxWalkSpeed = self.maxWalkSpeed

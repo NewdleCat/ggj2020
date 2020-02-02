@@ -18,7 +18,7 @@ function NewScene()
     scene.startCamMoveTime = 0
     scene.endCamMoveTime = 0
     scene.time = 0
-    scene.defaultCamMoveDuration = 0.5
+    scene.defaultCamMoveDuration = 0.4
     scene.isCameraMoving = false
     scene.moveWithCameraFunction = nil
     

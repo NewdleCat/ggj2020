@@ -41,8 +41,8 @@ function NewRobotCorpse(robot)
             love.graphics.draw(
                 v.sprite.source,
                 v.sprite[1],
-                v.x,
-                v.y,
+                v.x - scene.camera.x,
+                v.y - scene.camera.y,
                 v.rot,
                 1, 1,
                 32, 32)
