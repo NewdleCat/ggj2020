@@ -11,9 +11,9 @@ require "Spawner"
 require "fallingstate"
 
 function love.load()
-	MapFile = "maps/joeymap11.png"
+	MapFile = "maps/testMap.png"
 	CameraStartingPixelX = 1
-	CameraStartingPixelY = 2
+	CameraStartingPixelY = 1
 
     Music = love.audio.newSource( 'music/sleep mode.mp3', 'static' )
     Music:setLooping(true) --the groove dont stop babey
@@ -76,21 +76,24 @@ function love.load()
             scene:add(NewBodyTrigger(x,y,
                 NewAnimatedSprite("assets/bodypickup1.png"),
                 NewOneLegPlayer,
-                MusicBootup))
+                MusicBootup,
+                love.graphics.newImage("assets/bodyfind1.png")))
         end,
         [0x00EB00] = function (scene, i, j) ------------------------ ROBOT LEG 2
             local x, y = scene:tileCoordToCoord(i, j)
             scene:add(NewBodyTrigger(x,y,
                 NewAnimatedSprite("assets/bodypickup2.png"),
                 NewArmlessPlayer,
-                MusicDigital))
+                MusicDigital,
+                love.graphics.newImage("assets/bodyfind2.png")))
         end,
         [0x00D700] = function (scene, i, j) ------------------------ ROBOT NORMAL
             local x, y = scene:tileCoordToCoord(i, j)
             scene:add(NewBodyTrigger(x,y,
                 NewAnimatedSprite("assets/bodypickup3.png"),
                 NewPlayer,
-                MusicVibeTime))
+                MusicVibeTime,
+                love.graphics.newImage("assets/bodyfind3.png")))
         end,
         [0xFF0000] = SpikeTile, ------------------------------------ SPIKES,
         [0XFFFF00] = function (scene, i, j) ------------------------ CHECKPOINT

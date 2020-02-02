@@ -220,3 +220,44 @@ function NewFadeFromBlackHudObject(pause, sceneChange)
 
     return self
 end
+
+function NewFoundHudObject(sprite)
+    local self = {}
+    self.timer = 0
+    self.sprite = sprite
+    self.found = love.graphics.newImage("assets/found.png")
+    self.maxTimer = 5
+
+    self.update = function (self, scene, dt)
+        self.timer = self.timer + dt
+        return self.timer < self.maxTimer, true
+    end
+
+    self.draw = function (self)
+        local fadeOut = 0.7
+        love.graphics.setColor(0,0,0, Lerp(0, 0.8, math.min(self.timer*2, 1)))
+        if self.timer > self.maxTimer-1 then
+        love.graphics.setColor(0,0,0, Lerp(0.8, 0, self.timer-self.maxTimer+1))
+        end
+        love.graphics.rectangle("fill", 0,0, Width,Height)
+        love.graphics.setColor(1,1,1)
+        if self.timer > 0.9 then
+            if self.timer > self.maxTimer-1 then
+                love.graphics.setColor(1,1,1, Lerp(1, 0, self.timer-self.maxTimer+1))
+            end
+            love.graphics.draw(self.sprite)
+        end
+
+        love.graphics.setColor(1,1,1)
+        local foundTime = 1.8
+        if self.timer > foundTime then
+            local scale = math.max(Lerp(15,1, (self.timer-foundTime)*2.4), 1)
+            if self.timer > self.maxTimer-1 then
+                love.graphics.setColor(1,1,1, Lerp(1, 0, self.timer-self.maxTimer+1))
+            end
+            love.graphics.draw(self.found, Width/2, Height/2, 0, scale,scale, Width/2,Height/2)
+        end
+    end
+
+    return self
+end
