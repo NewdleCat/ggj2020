@@ -1,3 +1,4 @@
+require "Ship"
 require "Enemies"
 require "RobotCorpse"
 require "Scene"
@@ -32,6 +33,7 @@ function love.load()
 	Height = 64*14
 
 	TitleSprite = love.graphics.newImage("assets/title.png")
+	WinSprite = love.graphics.newImage("assets/win.png")
 	IsTitleScreen = -1
 	TriedToMoveCamera = false
 
@@ -52,6 +54,8 @@ function love.load()
     MikeSprite = NewAnimatedSprite("assets/mike.png")
     EyeDudeSprite = NewAnimatedSprite("assets/eyeDude.png")
     LaserSprite = NewAnimatedSprite("assets/laser.png")
+
+    ShipSprite = NewAnimatedSprite("assets/ship.png")
 
 	-- Tilemap
 	-- Use scene.tileSize to change the tilesize.
@@ -113,12 +117,12 @@ function love.load()
 		        end,
         	})
         end,
-        [0x00FFFF] = NewSpawner(NewMike),
-        [0x74AC54] = NewTile {
-        	drawable = NewAnimatedSprite("assets/ship.png"),
-        	isAnimated = true,
-        },
-        [0x00AAFF] = NewSpawner(NewEyeDude),
+        [0x00FFFF] = NewSpawner(NewMike), -------------------------- MIKE
+        [0x74AC54] = function(scene, i, j) ------------------------- SHIP
+            local x, y = scene:tileCoordToCoord(i, j)
+            scene:add(NewShip(x, y))
+        end,
+        [0x00AAFF] = NewSpawner(NewEyeDude), ----------------------- EYE DUDE
 	}
 
 	GameScene:loadMap(MapFile)

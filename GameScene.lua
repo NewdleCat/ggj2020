@@ -11,6 +11,8 @@ function NewGameScene()
     scene.respawnWaitDuration = 1
     scene.playerTimeOfDeath = 0
     scene.frontObjects = {}
+    scene.win = false
+    scene.winTime = 0
 
     -- Tilemap should be a table with rgb color hex values as keys and either a
     -- function or table as a value. For example:
@@ -202,6 +204,12 @@ function NewGameScene()
         love.graphics.setColor(1,1,1, 1-IsTitleScreen)
         love.graphics.draw(TitleSprite)
         love.graphics.setColor(1,1,1)
+
+        if self.win then
+            love.graphics.setColor(1,1,1, Clamp01(self.time - self.winTime))
+            love.graphics.draw(WinSprite)
+            love.graphics.setColor(1,1,1)
+        end
     end
 
     scene.onPlayerDie = function(self, player)
