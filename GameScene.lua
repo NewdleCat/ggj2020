@@ -5,7 +5,7 @@ function NewGameScene()
     scene.tileSize = 64
     scene.skyColor = { 0, 1, 1 }
     scene.lastCheckpoint = nil
-    scene.playerConstructor = NewPlayer
+    scene.playerConstructor = NewHeadPlayer
     scene.backtile = love.graphics.newImage("assets/background1.png")
 
     -- Tilemap should be a table with rgb color hex values as keys and either a
