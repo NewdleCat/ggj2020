@@ -8,8 +8,7 @@ function NewSpawner(constructor)
 
     ret.spawn = function(self, scene, i, j)
         local x, y = scene:tileCoordToCoord(i, j)
-        scene:add(self.constructor(x, y))
-        print("Hello fuckers")
+        scene:add(self.constructor(scene, x, y))
     end
     return ret
 end
