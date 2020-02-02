@@ -10,7 +10,9 @@ function NewCheckpoint(scene, x, y)
         isSpawner = true,
 
         onTriggerEnter = function(self, scene, other)
-            SfxCheckpoint:play()
+            if scene.lastCheckpoint ~= self then
+                SfxCheckpoint:play()
+            end
             scene.lastCheckpoint = self
         end,
 
