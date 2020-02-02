@@ -13,7 +13,7 @@ require "fallingstate"
 function love.load()
 	MapFile = "maps/testMap.png"
 	CameraStartingPixelX = 1
-	CameraStartingPixelY = 1
+	CameraStartingPixelY = 2
 
     Music = love.audio.newSource( 'music/sleep mode.mp3', 'static' )
     Music:setLooping(true) --the groove dont stop babey

@@ -15,6 +15,8 @@ function NewMike(scene, x, y)
         * (ret.maxShotInterval - ret.minShotInterval)
     ret.width = 32
     ret.height = 32
+    ret.blinking = 0
+    ret.shaking = 0
 
     local i, j = scene:coordToTileCoord(x, y)
     if scene:getTile(i + 1, j) then
@@ -22,18 +24,32 @@ function NewMike(scene, x, y)
     end
     
     ret.draw = function(self, scene)
-        animIndex = 1 + math.floor(self.animTime) % #self.sprite
+        animIndex = 1 + math.floor(self.animTime) % 2
+        if self.blinking > 0 then
+            animIndex = 3
+        end
+        local xoff = 0
+        if self.shaking > 0 then
+            xoff = love.math.random()*self.shaking*Choose{1,-1}*5
+        end
 		love.graphics.draw(
             self.sprite.source,
             self.sprite[animIndex],
-            self.x - scene.camera.x,self.y - scene.camera.y,
+            self.x - scene.camera.x + xoff,self.y - scene.camera.y,
             0, self.direction,1, 32,32)
     end
 
     ret.update = function(self, scene, dt)
         self.animTime = self.animTime + dt
+        self.blinking = math.max(self.blinking - dt, 0)
 
         -- Shooting
+        local shakeTime = 1
+        self.shaking = 0
+        if scene.time >= self.nextShotTime-shakeTime then
+            self.shaking = (scene.time-self.nextShotTime+shakeTime)/shakeTime
+        end
+
         if scene.time >= self.nextShotTime then
             if self.direction < 0 then
                 scene:add(NewLaser(x, y + 4, math.pi * 3 / 2))
@@ -41,6 +57,7 @@ function NewMike(scene, x, y)
                 scene:add(NewLaser(x, y + 4, math.pi * 1 / 2))
             end
             SfxLaserFire:clone():play()
+            self.blinking = 0.2
 
             self.nextShotTime = scene.time +
                 self.minShotInterval 
@@ -68,13 +85,18 @@ function NewEyeDude(scene, x, y)
         * (ret.maxShotInterval - ret.minShotInterval)
     ret.width = 32
     ret.height = 32
+    ret.shaking = 0
     
     ret.draw = function(self, scene)
         animIndex = 1 + math.floor(self.animTime) % #self.sprite
+        local xoff = 0
+        if self.shaking > 0 then
+            xoff = love.math.random()*self.shaking*Choose{1,-1}*5
+        end
 		love.graphics.draw(
             self.sprite.source,
             self.sprite[animIndex],
-            self.x - scene.camera.x,self.y - scene.camera.y,
+            self.x - scene.camera.x + xoff,self.y - scene.camera.y + xoff,
             0, 1,1, 32,32)
     end
 
@@ -82,6 +104,12 @@ function NewEyeDude(scene, x, y)
         self.animTime = self.animTime + dt
 
         -- Shooting
+        local shakeTime = 1
+        self.shaking = 0
+        if scene.time >= self.nextShotTime-shakeTime then
+            self.shaking = (scene.time-self.nextShotTime+shakeTime)/shakeTime
+        end
+
         if scene.time >= self.nextShotTime then
             if scene.player then
                 local rot = math.atan2(

@@ -234,7 +234,11 @@ function NewFoundHudObject(sprite)
     self.maxTimer = 5
 
     self.update = function (self, scene, dt)
+        local lastTimer = self.timer
         self.timer = self.timer + dt
+        if self.timer >= 1.8 + 1/2.4 and lastTimer < 1.8 + 1/2.4 then
+            ShakeScreen()
+        end
         return self.timer < self.maxTimer, true
     end
 
