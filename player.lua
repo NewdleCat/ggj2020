@@ -83,7 +83,7 @@ function NewPlayer(x,y)
 		-- adding graivty
 		if self.ySpeed > 0 then
 			if self.onWall then
-				self.ySpeed = math.min(self.ySpeed + dt*800, 80)
+				self.ySpeed = math.min(self.ySpeed + dt*800, 110)
 			else
 				self.ySpeed = self.ySpeed + dt*4000
 			end
@@ -129,6 +129,7 @@ function NewPlayer(x,y)
 			if self.onWall then
 				self.xSpeed = maxWalkSpeed*self.wallDirection*-1
 				self.onWall = false
+				self.direction = self.wallDirection*-1
 				print("walljump")
 			else
 				print("jump")
@@ -205,14 +206,18 @@ function NewPlayer(x,y)
         collision2 = scene:getCollisionAt(
             self.x+self.width*GetSign(self.xSpeed) + self.xSpeed*dt,
             self.y - self.height+headspace)
+
+        if not scene:getCollisionAt(self.x+(self.width+1.5)*self.wallDirection, self.y -self.height+headspace) then
+        	self.onWall = false
+        end
 		if collision1 or collision2 then
 			while not scene:getCollisionAt(self.x+self.width*GetSign(self.xSpeed) + self.xSpeed*dt,self.y + self.height-1)
 			and not scene:getCollisionAt(self.x+self.width*GetSign(self.xSpeed) + self.xSpeed*dt,self.y - self.height+headspace) do
 				self.x = self.x + GetSign(self.xSpeed)
 			end
 
-			if not self.onWall then
-				--self.onWall = true
+			if not onGround and not self.onWall and self.hasArms and collision2 then
+				self.onWall = true
 				self.wallDirection = GetSign(self.xSpeed)
 			end
 
@@ -258,10 +263,22 @@ function NewPlayer(x,y)
 		end
 
 		if not onGround then
-			if self.ySpeed < 0 then
-				self.animIndex = 3
+			if self.hasArms then
+				if self.ySpeed < 0 then
+					self.animIndex = 6
+				else
+					self.animIndex = 7
+				end
 			else
-				self.animIndex = 2
+				if self.ySpeed < 0 then
+					self.animIndex = 5
+				else
+					self.animIndex = 6
+				end
+			end
+
+			if self.onWall then
+				self.animIndex = 8
 			end
 		end
 
@@ -299,11 +316,15 @@ function NewPlayer(x,y)
 
 	self.draw = function (self, scene)
 		love.graphics.setColor(1,1,1)
+		local direction = self.direction
+		if self.onWall then
+			direction = 1*self.wallDirection
+		end
 		love.graphics.draw(
             self.sprite.source,
             self.sprite[math.floor(self.animIndex)],
             self.x - scene.camera.x,self.y - scene.camera.y,
-            0, self.direction,1, 32,32)
+            0, direction,1, 32,32)
 	end
 
 	return self
