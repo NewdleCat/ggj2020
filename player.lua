@@ -406,6 +406,7 @@ function NewHeadPlayer(x,y)
 
         doCameraMove(self, scene)
 
+        --print(self.x, self.y)
         -- Call onTileStay on the tiles behind you.
         -- For spikes and shit
         for m = -1, 1 do

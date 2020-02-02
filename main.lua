@@ -35,32 +35,14 @@ function love.load()
                 x = x,
                 y = y,
                 spawn = function(self, scene, constructor)
-                    return scene:add(constructor(
-                        self.x + 0.5 * scene.tileSize,
-                        self.y + 0.5 * scene.tileSize))
+                	scene.player = scene:add(constructor(self.x + 0.5 * scene.tileSize, self.y + 0.5 * scene.tileSize))
+                    return scene.player
                 end
             }
 	    end,
         [0x00FF00] = function (scene, i, j) ------------------------ ROBOT LEG AND BODY
             local x, y = scene:tileCoordToCoord(i, j)
-            scene:add(NewTrigger {
-                x = x,
-                y = y,
-                width = scene.tileSize,
-                height = scene.tileSize,
-                sprite = love.graphics.newImage("assets/robotLegAndBody.png"),
-
-                onTriggerEnter = function(self, scene, other)
-                    print("Enter", other)
-                end,
-                onTriggerExit = function(self, scene, other)
-                    print("Exit", other)
-                end,
-
-                draw = function (self, scene)
-                	love.graphics.draw(self.sprite, self.x - scene.camera.x,self.y - scene.camera.y)
-                end,
-            })
+            scene:add(NewBodyTrigger(x,y, NewAnimatedSprite("assets/bodypickup1.png"), NewOneLegPlayer))
         end,
         [0xFF0000] = SpikeTile, ------------------------------------ SPIKES,
         [0XFFFF00] = function (scene, i, j) ------------------------ CHECKPOINT

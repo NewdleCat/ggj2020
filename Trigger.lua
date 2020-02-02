@@ -35,8 +35,44 @@ function NewTrigger(attributes)
             end
         end
         self.lastContainsPlayer = self.containsPlayer
+        if self.customUpdate then
+            self:customUpdate(scene, dt)
+        end
         return true
     end
     return trigger
 end
 
+function NewBodyTrigger(x,y, sprite, transformation)
+    local self = NewTrigger {
+        x = x,
+        y = y,
+        width = 64,
+        height = 64,
+        sprite = sprite,
+        transformation = transformation,
+        animIndex = 1,
+        timer = 0,
+
+        onTriggerEnter = function(self, scene, other)
+            scene:transformPlayer(self.transformation)
+            self.dead = true
+        end,
+        onTriggerExit = function(self, scene, other)
+        end,
+
+        customUpdate = function (self, scene, dt)
+            self.animIndex = self.animIndex + dt*10
+            self.timer = self.timer + dt
+            if self.animIndex > #self.sprite then
+                self.animIndex = 1
+            end
+        end,
+
+        draw = function (self, scene)
+            love.graphics.draw(self.sprite.source, self.sprite[math.floor(self.animIndex)], self.x - scene.camera.x,self.y - scene.camera.y -16 + math.sin(self.timer)*12)
+        end,
+    }
+
+    return self
+end
