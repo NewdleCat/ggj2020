@@ -10,6 +10,7 @@ function NewGameScene()
     scene.backgroundTimer = 0
     scene.respawnWaitDuration = 1
     scene.playerTimeOfDeath = 0
+    scene.frontObjects = {}
 
     -- Tilemap should be a table with rgb color hex values as keys and either a
     -- function or table as a value. For example:
@@ -67,6 +68,11 @@ function NewGameScene()
         if object.isPlayer then
             self.player = object
         end
+        return object
+    end
+
+    scene.frontAdd = function (self, object)
+        self.frontObjects[#self.frontObjects + 1] = object
         return object
     end
 
@@ -134,6 +140,18 @@ function NewGameScene()
                     >= self.respawnWaitDuration then
             self:spawnPlayer()
         end
+
+        if not self.isCameraMoving then
+            local i = 1
+            while i <= #self.frontObjects do
+                local object = self.frontObjects[i]
+                if (not object.update or object:update(self, dt)) and not object.dead then
+                    i=i+1
+                else
+                    table.remove(self.frontObjects, i)
+                end
+            end
+        end
     end
 
     local sceneDraw = scene.draw
@@ -168,6 +186,10 @@ function NewGameScene()
                 end
             end
         end
+
+        for i=1, #self.frontObjects do
+            self.frontObjects[i]:draw(scene)
+        end
     end
 
     scene.onPlayerDie = function(self, player)
@@ -177,6 +199,7 @@ function NewGameScene()
 
     scene.spawnPlayer = function(self)
         self.lastCheckpoint:spawn(self, self.playerConstructor)
+        self:frontAdd(NewPlayerSpawnAnimation())
         self:moveCameraTo(
             math.floor(self.player.x / Width) * Width,
             math.floor(self.player.y / Height) * Height,
