@@ -3,7 +3,8 @@ function NewRobotCorpse(robot)
     local ret = {}
     ret.particles = {}
     ret.time = 0.0
-    ret.duration = 2.0
+    ret.duration = 4.0
+    ret.fadeTime = 1.0
 
     function newParticle(sprite)
         local vx
@@ -21,11 +22,21 @@ function NewRobotCorpse(robot)
         }
     end
 
-    newParticle(SpriteRobotLeg)
-    newParticle(SpriteRobotArms)
-    newParticle(SpriteRobotHead)
+    newParticle(deathArmLeft)
+    newParticle(deathArmRight)
+    newParticle(deathFootLeft)
+    newParticle(deathFootRight)
+    for i = 1, 3 do
+        newParticle(deathGear1)
+    end
+    for i = 1, 3 do
+        newParticle(deathGear2)
+    end
+    newParticle(deathHead)
 
     ret.draw = function(self, scene)
+        love.graphics.setColor(1, 1, 1,
+            1 - Clamp01(self.time - self.duration + self.fadeTime))
         for i, v in ipairs(self.particles) do
             love.graphics.draw(
                 v.sprite.source,
@@ -36,6 +47,7 @@ function NewRobotCorpse(robot)
                 1, 1,
                 32, 32)
         end
+        love.graphics.setColor(1, 1, 1, 1)
     end
     ret.update = function(self, scene, dt)
         for i, v in ipairs(self.particles) do
@@ -43,6 +55,13 @@ function NewRobotCorpse(robot)
             v.y = v.y + v.vy * dt
             v.rot = v.rot + v.vr * dt
             v.vy = v.vy + dt * 1024
+
+            local tile = scene:coordToTile(v.x, v.y)
+            if tile and tile.isSolid then
+                v.vx = 0
+                v.vy = 0
+                v.vr = 0
+            end
         end
         self.time = self.time + dt
         return self.time <= self.duration
