@@ -100,6 +100,11 @@ function NewScene()
         self.endCamMovePos.y = y
         self.startCamMoveTime = self.time
         self.endCamMoveTime = self.time + duration
+
+        -- Kinda hacky but whatever lol
+        if duration == 0 then
+            self.startCamMoveTime = self.time - 1
+        end
     end
 
     return scene

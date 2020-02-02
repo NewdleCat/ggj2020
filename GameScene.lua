@@ -165,6 +165,10 @@ function NewGameScene()
 
     scene.spawnPlayer = function(self)
         self.lastCheckpoint:spawn(self, self.playerConstructor)
+        self:moveCameraTo(
+            math.floor(self.player.x / Width) * Width,
+            math.floor(self.player.y / Height) * Height,
+            0)
     end
 
     scene.transformPlayer = function (self, newplayer)

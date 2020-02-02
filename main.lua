@@ -2,6 +2,7 @@ require "Scene"
 require "player"
 require "GameScene"
 require "Tile"
+require "Tiles"
 require "Trigger"
 require "Checkpoint"
 
@@ -9,6 +10,9 @@ function love.load()
     music = love.audio.newSource( 'music/sleep mode.mp3', 'static' )
     music:setLooping( true ) --the groove dont stop babey
     music:play()
+
+	Width = 64*20
+	Height = Width * 0.5
 
 	Scene = NewGameScene()
 	love.graphics.setDefaultFilter("nearest")
@@ -35,15 +39,7 @@ function love.load()
             local x, y = scene:tileCoordToCoord(i, j)
             scene:add(NewBodyTrigger(x,y, NewAnimatedSprite("assets/bodypickup1.png"), NewOneLegPlayer))
         end,
-        [0xFF0000] = NewDirectionalTile { -------------------------- SPIKES
-            drawable = love.graphics.newImage("assets/spikes1.png"),
-            isSolid = false,
-            onEnter = function(self, other)
-                if other.health then
-                    other.health = other.health - 1
-                end
-            end
-        },
+        [0xFF0000] = SpikeTile, ------------------------------------ SPIKES,
         [0XFFFF00] = function (scene, i, j) ------------------------ CHECKPOINT
             local x, y = scene:tileCoordToCoord(i, j)
             scene:add(NewCheckpoint(scene, x, y))
@@ -52,8 +48,6 @@ function love.load()
 
 	Scene:loadMap("maps/testMap.png")
     Scene:spawnPlayer()
-	Width = 64*20
-	Height = Width * 0.5
 	Canvas = love.graphics.newCanvas(Width, Height)
 
 	local dw,dh = love.window.getDesktopDimensions()
