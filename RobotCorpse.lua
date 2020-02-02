@@ -6,13 +6,17 @@ function NewRobotCorpse(robot)
     ret.duration = 2.0
 
     function newParticle(sprite)
+        local vx
+        local vy
+        vx = love.math.random() * 256 - love.math.random() * 256
+        vy = -love.math.random() * 256 - 256
         ret.particles[#ret.particles + 1] = {
             sprite = sprite,
             x = robot.x,
             y = robot.y,
             rot = love.math.random() * math.pi * 2,
-            vx = love.math.random() * 256 - love.math.random() * 256,
-            vy = love.math.random() * 256 - love.math.random() * 1024,
+            vx = vx,
+            vy = vy,
             vr = love.math.random() * math.pi - love.math.random() * math.pi
         }
     end
