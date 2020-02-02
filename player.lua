@@ -395,7 +395,7 @@ function NewHeadPlayer(x,y)
 
         doCameraMove(self, scene)
 
-        print(self.x, self.y)
+        --print(self.x, self.y)
 
         -- Get deleted if you die.
         if self.health <= 0 then

@@ -167,6 +167,12 @@ function NewGameScene()
         self.lastCheckpoint:spawn(self, self.playerConstructor)
     end
 
+    scene.transformPlayer = function (self, newplayer)
+        self.playerConstructor = newplayer
+        self.player.dead = true
+        self.player = self:add(self.playerConstructor(math.floor(self.player.x/self.tileSize)*self.tileSize +self.tileSize/2,math.floor(self.player.y/self.tileSize)*self.tileSize + self.tileSize/2))
+    end
+
     return scene
 end
 
