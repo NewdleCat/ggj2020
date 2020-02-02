@@ -43,6 +43,7 @@ function love.load()
 
 	TitleSprite = love.graphics.newImage("assets/title.png")
 	WinSprite = love.graphics.newImage("assets/win.png")
+    SmokeSprite = love.graphics.newImage("assets/smoke.png")
 	IsTitleScreen = -1
 	TriedToMoveCamera = false
 
@@ -65,6 +66,7 @@ function love.load()
     LaserSprite = NewAnimatedSprite("assets/laser.png")
 
     ShipSprite = NewAnimatedSprite("assets/ship.png")
+
 
 	-- Tilemap
 	-- Use scene.tileSize to change the tilesize.
