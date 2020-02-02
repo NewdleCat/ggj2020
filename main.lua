@@ -1,3 +1,4 @@
+require "RobotCorpse"
 require "Scene"
 require "player"
 require "GameScene"
@@ -16,6 +17,10 @@ function love.load()
 
 	Scene = NewGameScene()
 	love.graphics.setDefaultFilter("nearest")
+
+    SpriteRobotLeg = NewAnimatedSprite("assets/robotLeg.png")
+    SpriteRobotArms = NewAnimatedSprite("assets/robotArms.png")
+    SpriteRobotHead = NewAnimatedSprite("assets/robothead.png")
 
 	-- Tilemap
 	-- Use scene.tileSize to change the tilesize.
