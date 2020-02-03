@@ -232,6 +232,7 @@ function ShakeScreen()
 end
 
 function love.update(dt)
+	--love.timer.sleep(0.05)
 	ScreenShake = ScreenShake - dt
     Scene:update(dt)
     UpdateButtons()

@@ -269,7 +269,7 @@ function NewPlayer(x,y)
 		-- animate walking, friction when idling
 		if not walking then
 			if onGround then
-				self.xSpeed = self.xSpeed * friction*dt*60
+				self.xSpeed = self.xSpeed * friction/(dt*60)
 			end
 			if math.floor(self.animIndex) ~= 1 and math.floor(self.animIndex) ~= 4 then
 				self.animIndex = 1
@@ -529,7 +529,7 @@ function NewHeadPlayer(x,y)
 
 		-- animate walking, friction when idling
 		if not walking and onGround then
-			self.xSpeed = self.xSpeed * friction*dt*60
+			self.xSpeed = self.xSpeed * friction/(dt*60)
 		end
 
 		self:animate(walking, onGround, scene, dt)
